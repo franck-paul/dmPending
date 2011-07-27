@@ -82,16 +82,16 @@ class dmPendingBehaviors
 	
 	public static function adminDashboardItems($core,$items)
 	{
-		// Add small modules to be displayed
+		// Add small modules to the items stack
 		$core->auth->user_prefs->addWorkspace('dmpending');
 		if ($core->auth->user_prefs->dmpending->pending_posts && !$core->auth->user_prefs->dmpending->pending_posts_large) {
-			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret = '<div id="pending-posts">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending posts').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
 			$ret .= '</div>';
 			$items[] = new ArrayObject(array($ret));
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && !$core->auth->user_prefs->dmpending->pending_comments_large) {
-			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
 			$ret .= '</div>';
 			$items[] = new ArrayObject(array($ret));
@@ -100,16 +100,16 @@ class dmPendingBehaviors
 
 	public static function adminDashboardContents($core,$contents)
 	{
-		// Add large modules to be displayed
+		// Add large modules to the contents stack
 		$core->auth->user_prefs->addWorkspace('dmpending');
 		if ($core->auth->user_prefs->dmpending->pending_posts && $core->auth->user_prefs->dmpending->pending_posts_large) {
-			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret = '<div id="pending-posts">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending posts').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && $core->auth->user_prefs->dmpending->pending_comments_large) {
-			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
