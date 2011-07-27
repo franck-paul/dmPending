@@ -11,9 +11,11 @@
 # -- END LICENSE BLOCK -----------------------------------------
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
+// Dashboard behaviours
 $core->addBehavior('adminDashboardItems',array('dmPendingBehaviors','adminDashboardItems'));
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
 
+// User-preferecences behaviours
 $core->addBehavior('adminBeforeUserUpdate',array('dmPendingBehaviors','adminBeforeUserUpdate'));
 $core->addBehavior('adminPreferencesForm',array('dmPendingBehaviors','adminPreferencesForm'));
 
@@ -23,11 +25,33 @@ class dmPendingBehaviors
 	public static function adminDashboardItems($core,$items)
 	{
 		// Add small modules to be displayed
+		$core->auth->user_prefs->addWorkspace('dmpending');
+		if ($core->auth->user_prefs->dmpending->pending_posts && !$core->auth->user_prefs->dmpending->pending_posts_large) {
+			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret .= '</div>';
+			$items[] = new ArrayObject(array($ret));
+		}
+		if ($core->auth->user_prefs->dmpending->pending_comments && !$core->auth->user_prefs->dmpending->pending_comments_large) {
+			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret .= '</div>';
+			$items[] = new ArrayObject(array($ret));
+		}
 	}
 
 	public static function adminDashboardContents($core,$contents)
 	{
 		// Add large modules to be displayed
+		$core->auth->user_prefs->addWorkspace('dmpending');
+		if ($core->auth->user_prefs->dmpending->pending_posts && $core->auth->user_prefs->dmpending->pending_posts_large) {
+			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret .= '</div>';
+			$contents[] = new ArrayObject(array($ret));
+		}
+		if ($core->auth->user_prefs->dmpending->pending_comments && $core->auth->user_prefs->dmpending->pending_comments_large) {
+			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret .= '</div>';
+			$contents[] = new ArrayObject(array($ret));
+		}
 	}
 
 	public static function adminBeforeUserUpdate($cur,$userID)
