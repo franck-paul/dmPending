@@ -1,0 +1,47 @@
+msgid "Pending posts"
+msgstr "Billets en attente"
+
+msgid "Pending comments"
+msgstr "Commentaires en attente"
+
+msgid "No pending post"
+msgstr "Aucun billet en attente"
+
+msgid "No pending comment"
+msgstr "Aucun commentaire en attente"
+
+msgid "on"
+msgstr "le"
+
+msgid "by"
+msgstr "par"
+
+msgid "See all pending posts"
+msgstr "Voir tous les billets en attente"
+
+msgid "See all pending comments"
+msgstr "Voir tous les commentaires en attente"
+
+msgid "Pending posts on dashboard"
+msgstr "Billets en attente sur le tableau de bord"
+
+msgid "Display pending posts"
+msgstr "Afficher les billets en attente"
+
+msgid "Number of pending posts to display:"
+msgstr "Nombre de billets en attente à afficher :"
+
+msgid "Display pending posts in large section (under favorites)"
+msgstr "Afficher les billets en attente dans la partie large (sous les favoris)"
+
+msgid "Pending comments on dashboard"
+msgstr "Commentaires en attente sur le tableau de bord"
+
+msgid "Display pending comments"
+msgstr "Afficher les commentaires en attente"
+
+msgid "Number of pending comments to display:"
+msgstr "Nombre de commentaires en attente à afficher :"
+
+msgid "Display pending comments in large section (under favorites)"
+msgstr "Afficher les commentaires en attente dans la partie large (sous les favoris)"
