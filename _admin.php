@@ -22,17 +22,77 @@ $core->addBehavior('adminPreferencesForm',array('dmPendingBehaviors','adminPrefe
 # BEHAVIORS
 class dmPendingBehaviors
 {
+	private static function getPendingPosts($core,$nb,$large)
+	{
+		// Get last $nb pending posts
+		$params = array('post_status' => -2);
+		if ((integer) $nb > 0) {
+			$params['limit'] = (integer) $nb;
+		}
+		$rs = $core->blog->getPosts($params,false);
+		if (!$rs->isEmpty()) {
+			$ret = '<ul>';
+			while ($rs->fetch()) {
+				$ret .= '<li>';
+				$ret .= '<a href="post.php?id='.$rs->post_id.'">'.$rs->post_title.'</a>';
+				if ($large) {
+					$ret .= ' ('.
+						__('by').' '.$rs->user_id.' '.__('on').' '.
+						dt::dt2str($core->blog->settings->system->date_format,$rs->post_upddt).' '.
+						dt::dt2str($core->blog->settings->system->time_format,$rs->post_upddt).')';
+				}
+				$ret .= '</li>';
+			}
+			$ret .= '</ul>';
+			$ret .= '<p><a href="posts.php?status=-2">'.__('See all pending posts').'</a></p>';
+			return $ret;
+		} else {
+			return '<p>'.__('No pending post').'</p>';
+		}
+	}
+	
+	private static function getPendingComments($core,$nb,$large)
+	{
+		// Get last $nb pending comments
+		$params = array('comment_status' => -1);
+		if ((integer) $nb > 0) {
+			$params['limit'] = (integer) $nb;
+		}
+		$rs = $core->blog->getComments($params,false);
+		if (!$rs->isEmpty()) {
+			$ret = '<ul>';
+			while ($rs->fetch()) {
+				$ret .= '<li>';
+				$ret .= '<a href="comment.php?id='.$rs->comment_id.'">'.$rs->post_title.'</a>';
+				if ($large) {
+					$ret .= ' ('.
+						__('by').' '.$rs->comment_author.' '.__('on').' '.
+						dt::dt2str($core->blog->settings->system->date_format,$rs->comment_upddt).' '.
+						dt::dt2str($core->blog->settings->system->time_format,$rs->comment_upddt).')';
+				}
+				$ret .= '</li>';
+			}
+			$ret .= '</ul>';
+			$ret .= '<p><a href="comments.php?status=-1">'.__('See all pending comments').'</a></p>';
+			return $ret;
+		} else {
+			return '<p>'.__('No pending comment').'</p>';
+		}
+	}
+	
 	public static function adminDashboardItems($core,$items)
 	{
 		// Add small modules to be displayed
 		$core->auth->user_prefs->addWorkspace('dmpending');
 		if ($core->auth->user_prefs->dmpending->pending_posts && !$core->auth->user_prefs->dmpending->pending_posts_large) {
 			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
 			$ret .= '</div>';
 			$items[] = new ArrayObject(array($ret));
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && !$core->auth->user_prefs->dmpending->pending_comments_large) {
 			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
 			$ret .= '</div>';
 			$items[] = new ArrayObject(array($ret));
 		}
@@ -44,11 +104,13 @@ class dmPendingBehaviors
 		$core->auth->user_prefs->addWorkspace('dmpending');
 		if ($core->auth->user_prefs->dmpending->pending_posts && $core->auth->user_prefs->dmpending->pending_posts_large) {
 			$ret = '<div id="">'.'<h3>'.__('Pending posts').'</h3>';
+			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && $core->auth->user_prefs->dmpending->pending_comments_large) {
 			$ret = '<div id="">'.'<h3>'.__('Pending comments').'</h3>';
+			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
