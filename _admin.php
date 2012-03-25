@@ -3,7 +3,7 @@
 #
 # This file is part of Dotclear 2.
 #
-# Copyright (c) 2003-2011 Olivier Meunier & Association Dotclear
+# Copyright (c) 2011-2012 Franck Paul
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -92,7 +92,7 @@ class dmPendingBehaviors
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && !$core->auth->user_prefs->dmpending->pending_comments_large) {
 			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
+			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_comments_nb,false);
 			$ret .= '</div>';
 			$items[] = new ArrayObject(array($ret));
 		}
@@ -110,7 +110,7 @@ class dmPendingBehaviors
 		}
 		if ($core->auth->user_prefs->dmpending->pending_comments && $core->auth->user_prefs->dmpending->pending_comments_large) {
 			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
+			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_comments_nb,true);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
