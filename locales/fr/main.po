@@ -1,3 +1,9 @@
+msgid "Pending Dashboard Module"
+msgstr "Module d'affichage des billets et commentaires en attente"
+
+msgid "Display pending posts and comments on dashboard"
+msgstr "Affiche les billets et commentaires en attente sur le tableau de bord"
+
 msgid "Pending posts"
 msgstr "Billets en attente"
 
