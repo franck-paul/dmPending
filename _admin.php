@@ -38,8 +38,8 @@ class dmPendingBehaviors
 				if ($large) {
 					$ret .= ' ('.
 						__('by').' '.$rs->user_id.' '.__('on').' '.
-						dt::dt2str($core->blog->settings->system->date_format,$rs->post_upddt).' '.
-						dt::dt2str($core->blog->settings->system->time_format,$rs->post_upddt).')';
+						dt::dt2str($core->blog->settings->system->date_format,$rs->post_dt).' '.
+						dt::dt2str($core->blog->settings->system->time_format,$rs->post_dt).')';
 				}
 				$ret .= '</li>';
 			}
@@ -67,8 +67,8 @@ class dmPendingBehaviors
 				if ($large) {
 					$ret .= ' ('.
 						__('by').' '.$rs->comment_author.' '.__('on').' '.
-						dt::dt2str($core->blog->settings->system->date_format,$rs->comment_upddt).' '.
-						dt::dt2str($core->blog->settings->system->time_format,$rs->comment_upddt).')';
+						dt::dt2str($core->blog->settings->system->date_format,$rs->comment_dt).' '.
+						dt::dt2str($core->blog->settings->system->time_format,$rs->comment_dt).')';
 				}
 				$ret .= '</li>';
 			}
