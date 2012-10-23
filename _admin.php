@@ -16,7 +16,7 @@ $core->addBehavior('adminDashboardItems',array('dmPendingBehaviors','adminDashbo
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
 
 // User-preferecences behaviours
-$core->addBehavior('adminBeforeUserUpdate',array('dmPendingBehaviors','adminBeforeUserUpdate'));
+$core->addBehavior('adminBeforeUserOptionsUpdate',array('dmPendingBehaviors','adminBeforeUserUpdate'));
 $core->addBehavior('adminPreferencesForm',array('dmPendingBehaviors','adminPreferencesForm'));
 
 # BEHAVIORS
