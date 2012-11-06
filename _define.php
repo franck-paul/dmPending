@@ -12,8 +12,8 @@
 if (!defined('DC_RC_PATH')) { return; }
 
 $this->registerModule(
-	/* Name */				__("Pending Dashboard Module"),
-	/* Description*/		__("Display pending posts and comments on dashboard"),
+	/* Name */			"Pending Dashboard Module",
+	/* Description*/		"Display pending posts and comments on dashboard",
 	/* Author */			"Franck Paul",
 	/* Version */			'0.1.2'
 );
