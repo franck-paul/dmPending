@@ -153,15 +153,15 @@ class dmPendingBehaviors
 		
 		'<p>'.
 		form::checkbox('dmpending_posts',1,$core->auth->user_prefs->dmpending->pending_posts).' '.
-		'<label for"dmpending_posts" class="classic">'.__('Display pending posts').'</label></p>'.
+		'<label for="dmpending_posts" class="classic">'.__('Display pending posts').'</label></p>'.
 
-		'<p><label for"dmpending_posts_nb">'.__('Number of pending posts to display:').'</label>'.
+		'<p><label for="dmpending_posts_nb">'.__('Number of pending posts to display:').'</label>'.
 		form::field('dmpending_posts_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_posts_nb).
 		'</p>'.
 
 		'<p>'.
 		form::checkbox('dmpending_posts_large',1,$core->auth->user_prefs->dmpending->pending_posts_large).' '.
-		'<label for"dmpending_posts_large" class="classic">'.__('Display pending posts in large section (under favorites)').'</label></p>'.
+		'<label for="dmpending_posts_large" class="classic">'.__('Display pending posts in large section (under favorites)').'</label></p>'.
 
 		'<br class="clear" />'. //Opera sucks
 		'</fieldset>';
@@ -173,15 +173,15 @@ class dmPendingBehaviors
 		
 		'<p>'.
 		form::checkbox('dmpending_comments',1,$core->auth->user_prefs->dmpending->pending_comments).' '.
-		'<label for"dmpending_comments" class="classic">'.__('Display pending comments').'</label></p>'.
+		'<label for="dmpending_comments" class="classic">'.__('Display pending comments').'</label></p>'.
 
-		'<p><label for"dmpending_comments_nb">'.__('Number of pending comments to display:').'</label>'.
+		'<p><label for="dmpending_comments_nb">'.__('Number of pending comments to display:').'</label>'.
 		form::field('dmpending_comments_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_comments_nb).
 		'</p>'.
 
 		'<p>'.
 		form::checkbox('dmpending_comments_large',1,$core->auth->user_prefs->dmpending->pending_comments_large).' '.
-		'<label for"dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
+		'<label for="dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
 
 		'<br class="clear" />'. //Opera sucks
 		'</fieldset>';
