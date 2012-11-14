@@ -151,17 +151,17 @@ class dmPendingBehaviors
 
 		echo '<fieldset><legend>'.__('Pending posts on dashboard').'</legend>'.
 		
-		'<p><label for"dmpending_posts" class="classic">'.
+		'<p>'.
 		form::checkbox('dmpending_posts',1,$core->auth->user_prefs->dmpending->pending_posts).' '.
-		__('Display pending posts').'</label></p>'.
+		'<label for"dmpending_posts" class="classic">'.__('Display pending posts').'</label></p>'.
 
-		'<p><label for"dmpending_posts_nb">'.__('Number of pending posts to display:').
+		'<p><label for"dmpending_posts_nb">'.__('Number of pending posts to display:').'</label>'.
 		form::field('dmpending_posts_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_posts_nb).
-		'</label></p>'.
+		'</p>'.
 
-		'<p><label for"dmpending_posts_large" class="classic">'.
+		'<p>'.
 		form::checkbox('dmpending_posts_large',1,$core->auth->user_prefs->dmpending->pending_posts_large).' '.
-		__('Display pending posts in large section (under favorites)').'</label></p>'.
+		'<label for"dmpending_posts_large" class="classic">'.__('Display pending posts in large section (under favorites)').'</label></p>'.
 
 		'<br class="clear" />'. //Opera sucks
 		'</fieldset>';
@@ -171,17 +171,17 @@ class dmPendingBehaviors
 
 		echo '<fieldset><legend>'.__('Pending comments on dashboard').'</legend>'.
 		
-		'<p><label for"dmpending_comments" class="classic">'.
+		'<p>'.
 		form::checkbox('dmpending_comments',1,$core->auth->user_prefs->dmpending->pending_comments).' '.
-		__('Display pending comments').'</label></p>'.
+		'<label for"dmpending_comments" class="classic">'.__('Display pending comments').'</label></p>'.
 
-		'<p><label for"dmpending_comments_nb">'.__('Number of pending comments to display:').
+		'<p><label for"dmpending_comments_nb">'.__('Number of pending comments to display:').'</label>'.
 		form::field('dmpending_comments_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_comments_nb).
-		'</label></p>'.
+		'</p>'.
 
-		'<p><label for"dmpending_comments_large" class="classic">'.
+		'<p>'.
 		form::checkbox('dmpending_comments_large',1,$core->auth->user_prefs->dmpending->pending_comments_large).' '.
-		__('Display pending comments in large section (under favorites)').'</label></p>'.
+		'<label for"dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
 
 		'<br class="clear" />'. //Opera sucks
 		'</fieldset>';
