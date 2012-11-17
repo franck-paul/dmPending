@@ -67,3 +67,21 @@ msgstr "Affiche les billets et commentaires en attente sur le tableau de bord"
 
 #~ msgid "by"
 #~ msgstr "par"
+
+msgid "Display count of pending posts on posts dashboard icon"
+msgstr "Afficher le nombre de billets en attente sur le favori des billets du tableau de bord"
+
+msgid "Display count of pending comments on comments dashboard icon"
+msgstr "Afficher le nombre de commentaires en attente sur le favori des commentaires du tableau de bord"
+
+msgid "(%d pending posts)"
+msgstr "(incluant %d billets en attente)"
+
+msgid "(%d pending post)"
+msgstr "(incluant %d billet en attente)"
+
+msgid "(%d pending comments)"
+msgstr "(incluant %d commentaires en attente)"
+
+msgid "(%d pending comment)"
+msgstr "(incluant %d commentaire en attente)"

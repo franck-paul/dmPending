@@ -14,6 +14,7 @@ if (!defined('DC_CONTEXT_ADMIN')) { return; }
 // Dashboard behaviours
 $core->addBehavior('adminDashboardItems',array('dmPendingBehaviors','adminDashboardItems'));
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
+$core->addBehavior('adminDashboardFavsIcon',array('dmPendingBehaviors','adminDashboardFavsIcon'));
 
 // User-preferecences behaviours
 if (version_compare(DC_VERSION,'2.4.4','<=')) {
@@ -53,7 +54,18 @@ class dmPendingBehaviors
 			return '<p>'.__('No pending post').'</p>';
 		}
 	}
-	
+
+	private static function countPendingPosts($core)
+	{
+		$count = $core->blog->getPosts(array('post_status'=>-2),true)->f(0);
+		if ($count) {
+			$str = ($count > 1) ? __('(%d pending posts)') : __('(%d pending post)');
+			return '</a> <br /><a href="posts.php?status=-2"><span>'.sprintf($str,$count).'</span>';
+		} else {
+			return '';
+		}
+	}
+		
 	private static function getPendingComments($core,$nb,$large)
 	{
 		// Get last $nb pending comments
@@ -80,6 +92,36 @@ class dmPendingBehaviors
 			return $ret;
 		} else {
 			return '<p>'.__('No pending comment').'</p>';
+		}
+	}
+
+	private static function countPendingComments($core)
+	{
+		$count = $core->blog->getComments(array('comment_status'=>-1),true)->f(0);
+		if ($count) {
+			$str = ($count > 1) ? __('(%d pending comments)') : __('(%d pending comment)');
+			return '</a> <br /><a href="comments.php?status=-1"><span>'.sprintf($str,$count).'</span>';
+		} else {
+			return '';
+		}
+	}
+
+	public static function adminDashboardFavsIcon($core,$name,$icon)
+	{
+		$core->auth->user_prefs->addWorkspace('dmpending');
+		if ($core->auth->user_prefs->dmpending->pending_posts_count && $name == 'posts') {
+			// Hack posts title if there is at least one pending post
+			$str = dmPendingBehaviors::countPendingPosts($core);
+			if ($str != '') {
+				$icon[0] .= $str;
+			}
+		}
+		if ($core->auth->user_prefs->dmpending->pending_comments_count && $name == 'comments') {
+			// Hack comments title if there is at least one comment
+			$str = dmPendingBehaviors::countPendingComments($core);
+			if ($str != '') {
+				$icon[0] .= $str;
+			}
 		}
 	}
 	
@@ -130,10 +172,12 @@ class dmPendingBehaviors
 			$core->auth->user_prefs->dmpending->put('pending_posts',!empty($_POST['dmpending_posts']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_posts_nb',(integer)$_POST['dmpending_posts_nb'],'integer');
 			$core->auth->user_prefs->dmpending->put('pending_posts_large',!empty($_POST['dmpending_posts_large']),'boolean');
+			$core->auth->user_prefs->dmpending->put('pending_posts_count',!empty($_POST['dmpending_posts_count']),'boolean');
 			// Pending comments
 			$core->auth->user_prefs->dmpending->put('pending_comments',!empty($_POST['dmpending_comments']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_comments_nb',(integer)$_POST['dmpending_comments_nb'],'integer');
 			$core->auth->user_prefs->dmpending->put('pending_comments_large',!empty($_POST['dmpending_comments_large']),'boolean');
+			$core->auth->user_prefs->dmpending->put('pending_comments_count',!empty($_POST['dmpending_comments_count']),'boolean');
 		} 
 		catch (Exception $e)
 		{
@@ -150,6 +194,10 @@ class dmPendingBehaviors
 		echo '<div class="col">';
 
 		echo '<fieldset><legend>'.__('Pending posts on dashboard').'</legend>'.
+		
+		'<p>'.
+		form::checkbox('dmpending_posts_count',1,$core->auth->user_prefs->dmpending->pending_posts_count).' '.
+		'<label for"dmpending_posts_count" class="classic">'.__('Display count of pending posts on posts dashboard icon').'</label></p>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_posts',1,$core->auth->user_prefs->dmpending->pending_posts).' '.
@@ -171,6 +219,10 @@ class dmPendingBehaviors
 
 		echo '<fieldset><legend>'.__('Pending comments on dashboard').'</legend>'.
 		
+		'<p>'.
+		form::checkbox('dmpending_comments_count',1,$core->auth->user_prefs->dmpending->pending_comments_count).' '.
+		'<label for"dmpending_comments_count" class="classic">'.__('Display count of pending comments on comments dashboard icon').'</label></p>'.
+
 		'<p>'.
 		form::checkbox('dmpending_comments',1,$core->auth->user_prefs->dmpending->pending_comments).' '.
 		'<label for="dmpending_comments" class="classic">'.__('Display pending comments').'</label></p>'.

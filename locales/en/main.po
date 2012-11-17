@@ -63,3 +63,21 @@ msgstr ""
 
 msgid "Display pending posts and comments on dashboard"
 msgstr ""
+
+msgid "Display count of pending posts on posts dashboard icon"
+msgstr ""
+
+msgid "Display count of pending comments on comments dashboard icon"
+msgstr ""
+
+msgid "(%d pending posts)"
+msgstr ""
+
+msgid "(%d pending post)"
+msgstr ""
+
+msgid "(%d pending comments)"
+msgstr ""
+
+msgid "(%d pending comment)"
+msgstr ""
