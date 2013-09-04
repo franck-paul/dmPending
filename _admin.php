@@ -197,7 +197,7 @@ class dmPendingBehaviors
 		
 		'<p>'.
 		form::checkbox('dmpending_posts_count',1,$core->auth->user_prefs->dmpending->pending_posts_count).' '.
-		'<label for"dmpending_posts_count" class="classic">'.__('Display count of pending posts on posts dashboard icon').'</label></p>'.
+		'<label for="dmpending_posts_count" class="classic">'.__('Display count of pending posts on posts dashboard icon').'</label></p>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_posts',1,$core->auth->user_prefs->dmpending->pending_posts).' '.
@@ -221,7 +221,7 @@ class dmPendingBehaviors
 		
 		'<p>'.
 		form::checkbox('dmpending_comments_count',1,$core->auth->user_prefs->dmpending->pending_comments_count).' '.
-		'<label for"dmpending_comments_count" class="classic">'.__('Display count of pending comments on comments dashboard icon').'</label></p>'.
+		'<label for="dmpending_comments_count" class="classic">'.__('Display count of pending comments on comments dashboard icon').'</label></p>'.
 
 		'<p>'.
 		form::checkbox('dmpending_comments',1,$core->auth->user_prefs->dmpending->pending_comments).' '.
