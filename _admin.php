@@ -60,7 +60,7 @@ class dmPendingBehaviors
 		$count = $core->blog->getPosts(array('post_status'=>-2),true)->f(0);
 		if ($count) {
 			$str = ($count > 1) ? __('(%d pending posts)') : __('(%d pending post)');
-			return '</a> <br /><a href="posts.php?status=-2"><span>'.sprintf($str,$count).'</span>';
+			return '</span></a> <br /><a href="posts.php?status=-2"><span>'.sprintf($str,$count);
 		} else {
 			return '';
 		}
@@ -100,7 +100,7 @@ class dmPendingBehaviors
 		$count = $core->blog->getComments(array('comment_status'=>-1),true)->f(0);
 		if ($count) {
 			$str = ($count > 1) ? __('(%d pending comments)') : __('(%d pending comment)');
-			return '</a> <br /><a href="comments.php?status=-1"><span>'.sprintf($str,$count).'</span>';
+			return '</span></a> <br /><a href="comments.php?status=-1"><span>'.sprintf($str,$count);
 		} else {
 			return '';
 		}
