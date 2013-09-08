@@ -12,7 +12,6 @@
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
 // Dashboard behaviours
-$core->addBehavior('adminDashboardItems',array('dmPendingBehaviors','adminDashboardItems'));
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
 $core->addBehavior('adminDashboardFavsIcon',array('dmPendingBehaviors','adminDashboardFavsIcon'));
 
@@ -120,38 +119,24 @@ class dmPendingBehaviors
 			}
 		}
 	}
-	
-	public static function adminDashboardItems($core,$items)
-	{
-		// Add small modules to the items stack
-		$core->auth->user_prefs->addWorkspace('dmpending');
-		if ($core->auth->user_prefs->dmpending->pending_posts && !$core->auth->user_prefs->dmpending->pending_posts_large) {
-			$ret = '<div id="pending-posts">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending posts').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,false);
-			$ret .= '</div>';
-			$items[] = new ArrayObject(array($ret));
-		}
-		if ($core->auth->user_prefs->dmpending->pending_comments && !$core->auth->user_prefs->dmpending->pending_comments_large) {
-			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_comments_nb,false);
-			$ret .= '</div>';
-			$items[] = new ArrayObject(array($ret));
-		}
-	}
 
 	public static function adminDashboardContents($core,$contents)
 	{
 		// Add large modules to the contents stack
 		$core->auth->user_prefs->addWorkspace('dmpending');
-		if ($core->auth->user_prefs->dmpending->pending_posts && $core->auth->user_prefs->dmpending->pending_posts_large) {
+		if ($core->auth->user_prefs->dmpending->pending_posts) {
 			$ret = '<div id="pending-posts">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending posts').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingPosts($core,$core->auth->user_prefs->dmpending->pending_posts_nb,true);
+			$ret .= dmPendingBehaviors::getPendingPosts($core,
+				$core->auth->user_prefs->dmpending->pending_posts_nb,
+				$core->auth->user_prefs->dmpending->pending_posts_large);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
-		if ($core->auth->user_prefs->dmpending->pending_comments && $core->auth->user_prefs->dmpending->pending_comments_large) {
+		if ($core->auth->user_prefs->dmpending->pending_comments) {
 			$ret = '<div id="pending-comments">'.'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
-			$ret .= dmPendingBehaviors::getPendingComments($core,$core->auth->user_prefs->dmpending->pending_comments_nb,true);
+			$ret .= dmPendingBehaviors::getPendingComments($core,
+				$core->auth->user_prefs->dmpending->pending_comments_nb,
+				$core->auth->user_prefs->dmpending->pending_comments_large);
 			$ret .= '</div>';
 			$contents[] = new ArrayObject(array($ret));
 		}
@@ -202,7 +187,7 @@ class dmPendingBehaviors
 
 		'<p>'.
 		form::checkbox('dmpending_posts_large',1,$core->auth->user_prefs->dmpending->pending_posts_large).' '.
-		'<label for="dmpending_posts_large" class="classic">'.__('Display pending posts in large section (under favorites)').'</label></p>'.
+		'<label for="dmpending_posts_large" class="classic">'.__('Large screen').'</label></p>'.
 
 		'</div>';
 
@@ -222,7 +207,7 @@ class dmPendingBehaviors
 
 		'<p>'.
 		form::checkbox('dmpending_comments_large',1,$core->auth->user_prefs->dmpending->pending_comments_large).' '.
-		'<label for="dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
+		'<label for="dmpending_comments_large" class="classic">'.__('Large screen').'</label></p>'.
 
 		'</div>';
 	}

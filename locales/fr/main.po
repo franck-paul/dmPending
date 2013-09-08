@@ -39,9 +39,8 @@ msgstr "Afficher les billets en attente"
 msgid "Number of pending posts to display:"
 msgstr "Nombre de billets en attente à afficher :"
 
-msgid "Display pending posts in large section (under favorites)"
-msgstr ""
-"Afficher les billets en attente dans la partie large (sous les favoris)"
+msgid "Large screen"
+msgstr "Affichage large"
 
 msgid "Pending comments on dashboard"
 msgstr "Commentaires en attente sur le tableau de bord"
@@ -52,21 +51,11 @@ msgstr "Afficher les commentaires en attente"
 msgid "Number of pending comments to display:"
 msgstr "Nombre de commentaires en attente à afficher :"
 
-msgid "Display pending comments in large section (under favorites)"
-msgstr ""
-"Afficher les commentaires en attente dans la partie large (sous les favoris)"
-
 msgid "Pending Dashboard Module"
 msgstr "Module d'affichage des billets et commentaires en attente"
 
 msgid "Display pending posts and comments on dashboard"
 msgstr "Affiche les billets et commentaires en attente sur le tableau de bord"
-
-#~ msgid "on"
-#~ msgstr "le"
-
-#~ msgid "by"
-#~ msgstr "par"
 
 msgid "Display count of pending posts on posts dashboard icon"
 msgstr "Afficher le nombre de billets en attente sur le favori des billets du tableau de bord"
