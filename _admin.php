@@ -186,10 +186,7 @@ class dmPendingBehaviors
 		// Add fieldset for plugin options
 		$core->auth->user_prefs->addWorkspace('dmpending');
 
-//		echo '<div class="two-cols">';
-		echo '<div class="box">';
-
-		echo '<div class="fieldset"><h5>'.__('Pending posts on dashboard').'</h5>'.
+		echo '<div class="fieldset"><h4>'.__('Pending posts on dashboard').'</h4>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_posts_count',1,$core->auth->user_prefs->dmpending->pending_posts_count).' '.
@@ -209,10 +206,7 @@ class dmPendingBehaviors
 
 		'</div>';
 
-		echo '</div>';
-		echo '<div class="box">';
-
-		echo '<div class="fieldset"><h5>'.__('Pending comments on dashboard').'</h5>'.
+		echo '<div class="fieldset"><h4>'.__('Pending comments on dashboard').'</h4>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_comments_count',1,$core->auth->user_prefs->dmpending->pending_comments_count).' '.
@@ -231,9 +225,6 @@ class dmPendingBehaviors
 		'<label for="dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
 
 		'</div>';
-
-		echo '</div>';
-//		echo '</div>';
 	}
 }
 ?>
