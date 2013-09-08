@@ -16,12 +16,8 @@ $core->addBehavior('adminDashboardItems',array('dmPendingBehaviors','adminDashbo
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
 $core->addBehavior('adminDashboardFavsIcon',array('dmPendingBehaviors','adminDashboardFavsIcon'));
 
-// User-preferecences behaviours
-if (version_compare(DC_VERSION,'2.4.4','<=')) {
-	$core->addBehavior('adminBeforeUserUpdate',array('dmPendingBehaviors','adminBeforeUserUpdate'));
-}
-$core->addBehavior('adminBeforeUserOptionsUpdate',array('dmPendingBehaviors','adminBeforeUserUpdate'));
-$core->addBehavior('adminPreferencesForm',array('dmPendingBehaviors','adminPreferencesForm'));
+$core->addBehavior('adminAfterDashboardOptionsUpdate',array('dmPendingBehaviors','adminAfterDashboardOptionsUpdate'));
+$core->addBehavior('adminDashboardOptionsForm',array('dmPendingBehaviors','adminDashboardOptionsForm'));
 
 # BEHAVIORS
 class dmPendingBehaviors
@@ -161,7 +157,7 @@ class dmPendingBehaviors
 		}
 	}
 
-	public static function adminBeforeUserUpdate($cur,$userID)
+	public static function adminAfterDashboardOptionsUpdate($userID)
 	{
 		global $core;
 
@@ -185,15 +181,15 @@ class dmPendingBehaviors
 		}
 	}
 	
-	public static function adminPreferencesForm($core)
+	public static function adminDashboardOptionsForm($core)
 	{
 		// Add fieldset for plugin options
 		$core->auth->user_prefs->addWorkspace('dmpending');
 
-		echo '<div class="two-cols">';
-		echo '<div class="col">';
+//		echo '<div class="two-cols">';
+		echo '<div class="box">';
 
-		echo '<fieldset><legend>'.__('Pending posts on dashboard').'</legend>'.
+		echo '<div class="fieldset"><h5>'.__('Pending posts on dashboard').'</h5>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_posts_count',1,$core->auth->user_prefs->dmpending->pending_posts_count).' '.
@@ -211,13 +207,12 @@ class dmPendingBehaviors
 		form::checkbox('dmpending_posts_large',1,$core->auth->user_prefs->dmpending->pending_posts_large).' '.
 		'<label for="dmpending_posts_large" class="classic">'.__('Display pending posts in large section (under favorites)').'</label></p>'.
 
-		'<br class="clear" />'. //Opera sucks
-		'</fieldset>';
+		'</div>';
 
 		echo '</div>';
-		echo '<div class="col">';
+		echo '<div class="box">';
 
-		echo '<fieldset><legend>'.__('Pending comments on dashboard').'</legend>'.
+		echo '<div class="fieldset"><h5>'.__('Pending comments on dashboard').'</h5>'.
 		
 		'<p>'.
 		form::checkbox('dmpending_comments_count',1,$core->auth->user_prefs->dmpending->pending_comments_count).' '.
@@ -235,11 +230,10 @@ class dmPendingBehaviors
 		form::checkbox('dmpending_comments_large',1,$core->auth->user_prefs->dmpending->pending_comments_large).' '.
 		'<label for="dmpending_comments_large" class="classic">'.__('Display pending comments in large section (under favorites)').'</label></p>'.
 
-		'<br class="clear" />'. //Opera sucks
-		'</fieldset>';
+		'</div>';
 
 		echo '</div>';
-		echo '</div>';
+//		echo '</div>';
 	}
 }
 ?>
