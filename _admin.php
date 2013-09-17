@@ -60,7 +60,7 @@ class dmPendingBehaviors
 			return '';
 		}
 	}
-		
+
 	private static function getPendingComments($core,$nb,$large)
 	{
 		// Get last $nb pending comments
@@ -152,47 +152,47 @@ class dmPendingBehaviors
 			// Pending posts
 			$core->auth->user_prefs->dmpending->put('pending_posts',!empty($_POST['dmpending_posts']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_posts_nb',(integer)$_POST['dmpending_posts_nb'],'integer');
-			$core->auth->user_prefs->dmpending->put('pending_posts_large',!empty($_POST['dmpending_posts_large']),'boolean');
+			$core->auth->user_prefs->dmpending->put('pending_posts_large',empty($_POST['dmpending_posts_small']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_posts_count',!empty($_POST['dmpending_posts_count']),'boolean');
 			// Pending comments
 			$core->auth->user_prefs->dmpending->put('pending_comments',!empty($_POST['dmpending_comments']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_comments_nb',(integer)$_POST['dmpending_comments_nb'],'integer');
-			$core->auth->user_prefs->dmpending->put('pending_comments_large',!empty($_POST['dmpending_comments_large']),'boolean');
+			$core->auth->user_prefs->dmpending->put('pending_comments_large',empty($_POST['dmpending_comments_small']),'boolean');
 			$core->auth->user_prefs->dmpending->put('pending_comments_count',!empty($_POST['dmpending_comments_count']),'boolean');
-		} 
+		}
 		catch (Exception $e)
 		{
 			$core->error->add($e->getMessage());
 		}
 	}
-	
+
 	public static function adminDashboardOptionsForm($core)
 	{
 		// Add fieldset for plugin options
 		$core->auth->user_prefs->addWorkspace('dmpending');
 
 		echo '<div class="fieldset"><h4>'.__('Pending posts on dashboard').'</h4>'.
-		
+
 		'<p>'.
 		form::checkbox('dmpending_posts_count',1,$core->auth->user_prefs->dmpending->pending_posts_count).' '.
 		'<label for="dmpending_posts_count" class="classic">'.__('Display count of pending posts on posts dashboard icon').'</label></p>'.
-		
+
 		'<p>'.
 		form::checkbox('dmpending_posts',1,$core->auth->user_prefs->dmpending->pending_posts).' '.
 		'<label for="dmpending_posts" class="classic">'.__('Display pending posts').'</label></p>'.
 
-		'<p><label for="dmpending_posts_nb">'.__('Number of pending posts to display:').'</label>'.
+		'<p><label for="dmpending_posts_nb" class="classic">'.__('Number of pending posts to display:').'</label>'.
 		form::field('dmpending_posts_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_posts_nb).
 		'</p>'.
 
 		'<p>'.
-		form::checkbox('dmpending_posts_large',1,$core->auth->user_prefs->dmpending->pending_posts_large).' '.
-		'<label for="dmpending_posts_large" class="classic">'.__('Large screen').'</label></p>'.
+		form::checkbox('dmpending_posts_small',1,!$core->auth->user_prefs->dmpending->pending_posts_large).' '.
+		'<label for="dmpending_posts_small" class="classic">'.__('Small screen').'</label></p>'.
 
 		'</div>';
 
 		echo '<div class="fieldset"><h4>'.__('Pending comments on dashboard').'</h4>'.
-		
+
 		'<p>'.
 		form::checkbox('dmpending_comments_count',1,$core->auth->user_prefs->dmpending->pending_comments_count).' '.
 		'<label for="dmpending_comments_count" class="classic">'.__('Display count of pending comments on comments dashboard icon').'</label></p>'.
@@ -201,13 +201,13 @@ class dmPendingBehaviors
 		form::checkbox('dmpending_comments',1,$core->auth->user_prefs->dmpending->pending_comments).' '.
 		'<label for="dmpending_comments" class="classic">'.__('Display pending comments').'</label></p>'.
 
-		'<p><label for="dmpending_comments_nb">'.__('Number of pending comments to display:').'</label>'.
+		'<p><label for="dmpending_comments_nb" class="classic">'.__('Number of pending comments to display:').'</label>'.
 		form::field('dmpending_comments_nb',2,3,(integer) $core->auth->user_prefs->dmpending->pending_comments_nb).
 		'</p>'.
 
 		'<p>'.
-		form::checkbox('dmpending_comments_large',1,$core->auth->user_prefs->dmpending->pending_comments_large).' '.
-		'<label for="dmpending_comments_large" class="classic">'.__('Large screen').'</label></p>'.
+		form::checkbox('dmpending_comments_small',1,!$core->auth->user_prefs->dmpending->pending_comments_large).' '.
+		'<label for="dmpending_comments_small" class="classic">'.__('Small screen').'</label></p>'.
 
 		'</div>';
 	}

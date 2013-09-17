@@ -39,8 +39,8 @@ msgstr "Afficher les billets en attente"
 msgid "Number of pending posts to display:"
 msgstr "Nombre de billets en attente à afficher :"
 
-msgid "Large screen"
-msgstr "Affichage large"
+msgid "Small screen"
+msgstr "Affichage abrégé"
 
 msgid "Pending comments on dashboard"
 msgstr "Commentaires en attente sur le tableau de bord"

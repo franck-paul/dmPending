@@ -30,7 +30,7 @@ try
 	$core->auth->user_prefs->dmpending->put('pending_comments_large',true,'boolean','Large display',false,true);
 
 	$core->setVersion('dmPending',$new_version);
-	
+
 	return true;
 }
 catch (Exception $e)
