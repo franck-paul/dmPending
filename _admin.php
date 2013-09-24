@@ -12,6 +12,9 @@
 
 if (!defined('DC_CONTEXT_ADMIN')) { return; }
 
+// dead but useful code, in order to have translations
+__('Pending Dashboard Module').__('Display pending posts and comments on dashboard');
+
 // Dashboard behaviours
 $core->addBehavior('adminDashboardContents',array('dmPendingBehaviors','adminDashboardContents'));
 $core->addBehavior('adminDashboardFavsIcon',array('dmPendingBehaviors','adminDashboardFavsIcon'));

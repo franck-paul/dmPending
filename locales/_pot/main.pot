@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 dmPending module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-19 14:58+0200\n"
+"POT-Creation-Date: 2013-09-24 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,77 +17,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../hg-plugins/dmPending/_admin.php:47
+#: ../hg-plugins/dmPending//_admin.php:16
+msgid "Display pending posts and comments on dashboard"
+msgstr ""
+
+#: ../hg-plugins/dmPending//_admin.php:16
+msgid "Pending Dashboard Module"
+msgstr ""
+
+#: ../hg-plugins/dmPending//_admin.php:50
 msgid "See all pending posts"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:50
+#: ../hg-plugins/dmPending//_admin.php:53
 msgid "No pending post"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:58
+#: ../hg-plugins/dmPending//_admin.php:61
 #, php-format
 msgid "(%d pending post)"
 msgid_plural "(%d pending posts)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../hg-plugins/dmPending/_admin.php:87
+#: ../hg-plugins/dmPending//_admin.php:90
 msgid "See all pending comments"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:90
+#: ../hg-plugins/dmPending//_admin.php:93
 msgid "No pending comment"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:98
+#: ../hg-plugins/dmPending//_admin.php:101
 #, php-format
 msgid "(%d pending comment)"
 msgid_plural "(%d pending comments)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../hg-plugins/dmPending/_admin.php:129
+#: ../hg-plugins/dmPending//_admin.php:132
 msgid "Pending posts"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:137
+#: ../hg-plugins/dmPending//_admin.php:140
 msgid "Pending comments"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:175
+#: ../hg-plugins/dmPending//_admin.php:178
 msgid "Pending posts on dashboard"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:179
+#: ../hg-plugins/dmPending//_admin.php:182
 msgid "Display count of pending posts on posts dashboard icon"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:183
+#: ../hg-plugins/dmPending//_admin.php:186
 msgid "Display pending posts"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:185
+#: ../hg-plugins/dmPending//_admin.php:188
 msgid "Number of pending posts to display:"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:191
-#: ../hg-plugins/dmPending/_admin.php:211
+#: ../hg-plugins/dmPending//_admin.php:194
+#: ../hg-plugins/dmPending//_admin.php:214
 msgid "Small screen"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:195
+#: ../hg-plugins/dmPending//_admin.php:198
 msgid "Pending comments on dashboard"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:199
+#: ../hg-plugins/dmPending//_admin.php:202
 msgid "Display count of pending comments on comments dashboard icon"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:203
+#: ../hg-plugins/dmPending//_admin.php:206
 msgid "Display pending comments"
 msgstr ""
 
-#: ../hg-plugins/dmPending/_admin.php:205
+#: ../hg-plugins/dmPending//_admin.php:208
 msgid "Number of pending comments to display:"
 msgstr ""

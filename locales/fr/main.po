@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 dmPending module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-19 14:58+0200\n"
+"POT-Creation-Date: 2013-09-24 13:29+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Franck Paul <carnet.franck.paul@gmail.com>\n"
 "Language-Team: \n"
@@ -11,6 +11,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
+
+msgid "Display pending posts and comments on dashboard"
+msgstr "Affiche les billets et commentaires en attente sur le tableau de bord"
+
+msgid "Pending Dashboard Module"
+msgstr "Module d'affichage des billets et commentaires en attente"
 
 msgid "See all pending posts"
 msgstr "Voir tous les billets en attente"
@@ -68,9 +74,3 @@ msgstr "Afficher les commentaires en attente"
 
 msgid "Number of pending comments to display:"
 msgstr "Nombre de commentaires en attente à afficher :"
-
-msgid "Pending Dashboard Module"
-msgstr "Module d'affichage des billets et commentaires en attente"
-
-msgid "Display pending posts and comments on dashboard"
-msgstr "Affiche les billets et commentaires en attente sur le tableau de bord"
