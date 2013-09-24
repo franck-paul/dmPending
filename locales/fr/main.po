@@ -27,8 +27,8 @@ msgstr "Aucun billet en attente"
 #, php-format
 msgid "(%d pending post)"
 msgid_plural "(%d pending posts)"
-msgstr[0] "(incluant %d billet en attente)"
-msgstr[1] "(incluant %d billets en attente)"
+msgstr[0] "(dont %d en attente)"
+msgstr[1] "(dont %d en attente)"
 
 msgid "See all pending comments"
 msgstr "Voir tous les commentaires en attente"
@@ -39,8 +39,8 @@ msgstr "Aucun commentaire en attente"
 #, php-format
 msgid "(%d pending comment)"
 msgid_plural "(%d pending comments)"
-msgstr[0] "(incluant %d commentaire en attente)"
-msgstr[1] "(incluant %d commentaires en attente)"
+msgstr[0] "(dont %d en attente)"
+msgstr[1] "(dont %d en attente)"
 
 msgid "Pending posts"
 msgstr "Billets en attente"
