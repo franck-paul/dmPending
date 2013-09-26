@@ -220,4 +220,3 @@ class dmPendingBehaviors
 		'</div>';
 	}
 }
-?>
