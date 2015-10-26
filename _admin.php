@@ -131,7 +131,7 @@ class dmPendingBehaviors
 		if ($core->auth->user_prefs->dmpending->pending_posts) {
 			$class = ($core->auth->user_prefs->dmpending->pending_posts_large ? 'medium' : 'small');
 			$ret = '<div id="pending-posts" class="box '.$class.'">'.
-				'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending posts').'</h3>';
+				'<h3>'.'<img src="'.urldecode(dcPage::getPF('dmPending/icon.png')).'" alt="" />'.' '.__('Pending posts').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingPosts($core,
 				$core->auth->user_prefs->dmpending->pending_posts_nb,
 				$core->auth->user_prefs->dmpending->pending_posts_large);
@@ -141,7 +141,7 @@ class dmPendingBehaviors
 		if ($core->auth->user_prefs->dmpending->pending_comments) {
 			$class = ($core->auth->user_prefs->dmpending->pending_comments_large ? 'medium' : 'small');
 			$ret = '<div id="pending-comments" class="box '.$class.'">'.
-				'<h3>'.'<img src="index.php?pf=dmPending/icon.png" alt="" />'.' '.__('Pending comments').'</h3>';
+				'<h3>'.'<img src="'.urldecode(dcPage::getPF('dmPending/icon.png')).'" alt="" />'.' '.__('Pending comments').'</h3>';
 			$ret .= dmPendingBehaviors::getPendingComments($core,
 				$core->auth->user_prefs->dmpending->pending_comments_nb,
 				$core->auth->user_prefs->dmpending->pending_comments_large);
