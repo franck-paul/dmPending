@@ -61,7 +61,7 @@ class dmPendingBehaviors
         $count = $core->blog->getPosts(array('post_status' => -2), true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
-            return '</span></a> <br /><a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         } else {
             return '';
         }
@@ -101,7 +101,7 @@ class dmPendingBehaviors
         $count = $core->blog->getComments(array('comment_status' => -1), true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
-            return '</span></a> <br /><a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         } else {
             return '';
         }

@@ -27,7 +27,7 @@ dotclear.dmPendingPostsCount = function() {
             // Add full element (link + counter)
             var icon = $('#dashboard-main #icons p a[href="posts.php"]');
             if (icon.length) {
-              var xml = ' <br /><a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
+              var xml = ' <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
               icon.after(xml);
             }
           }
@@ -65,7 +65,7 @@ dotclear.dmPendingCommentsCount = function() {
             // Add full element (link + counter)
             var icon = $('#dashboard-main #icons p a[href="comments.php"]');
             if (icon.length) {
-              var xml = ' <br /><a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
+              var xml = ' <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
               icon.after(xml);
             }
           }
