@@ -19,7 +19,10 @@ $this->registerModule(
     "Franck Paul",                                     // Author
     '0.4',                                             // Version
     array(
-        'permissions' => 'admin',  // Permissions
-        'type'        => 'plugin' // Type
+        'requires'    => array(array('core', '2.14')),
+        'permissions' => 'admin',                                      // Permissions
+        'type'        => 'plugin',                                     // Type
+        'support'     => 'https://open-time.net/?q=dmPending',         // Support URL
+        'settings'    => array('pref' => '#user-favorites.dmpending') // Settings
     )
 );
