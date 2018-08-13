@@ -24,7 +24,7 @@ class dmPendingRest
     public static function getPendingPostsCount($core, $get)
     {
         $count = $core->blog->getPosts(array('post_status' => -2), true)->f(0);
-        $str   = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
+        $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count) : '');
 
         $rsp      = new xmlTag('count');
         $rsp->ret = $str;
@@ -41,7 +41,7 @@ class dmPendingRest
     public static function getPendingCommentsCount($core, $get)
     {
         $count = $core->blog->getComments(array('comment_status' => -1), true)->f(0);
-        $str   = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
+        $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count) : '');
 
         $rsp      = new xmlTag('count');
         $rsp->ret = $str;
