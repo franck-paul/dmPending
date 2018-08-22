@@ -38,7 +38,7 @@ class dmPendingBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li>';
+                $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
                 $ret .= '<a href="post.php?id=' . $rs->post_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $ret .= ' (' .
@@ -78,7 +78,7 @@ class dmPendingBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li>';
+                $ret .= '<li class="line" id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="comment.php?id=' . $rs->comment_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $ret .= ' (' .

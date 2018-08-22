@@ -17,9 +17,9 @@ $this->registerModule(
     "Pending Dashboard Module",                        // Name
     "Display pending posts and comments on dashboard", // Description
     "Franck Paul",                                     // Author
-    '0.4',                                             // Version
+    '0.5',                                             // Version
     array(
-        'requires'    => array(array('core', '2.14')),
+        'requires'    => array(array('core', '2.15')),
         'permissions' => 'admin',                                      // Permissions
         'type'        => 'plugin',                                     // Type
         'support'     => 'https://open-time.net/?q=dmPending',         // Support URL
