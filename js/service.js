@@ -12,28 +12,38 @@ dotclear.dmPendingPostsCount = function() {
       // console.log($('rsp',data).attr('message'));
       window.console.log('Dotclear REST server error');
     } else {
-      var nb = $('rsp>count', data).attr('ret');
-      if (nb != dotclear.dbPendingPostsCount_Counter) {
+      var ret = $('rsp>count', data).attr('ret');
+      if (ret != dotclear.dbPendingPostsCount_Counter) {
         // First pass or counter changed
         var icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
         if (icon.length) {
           // Update count if exists
           var nb_label = icon.children('span.db-icon-title-dm-pending');
           if (nb_label.length) {
-            nb_label.text(nb);
+            nb_label.text(ret);
           }
         } else {
-          if (nb != '') {
+          if (ret != '') {
             // Add full element (link + counter)
-            var icon = $('#dashboard-main #icons p a[href="posts.php"]');
+            icon = $('#dashboard-main #icons p a[href="posts.php"]');
             if (icon.length) {
-              var xml = ' <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
+              var xml = ' <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' + ret + '</span></a>';
               icon.after(xml);
             }
           }
         }
+        var nb = $('rsp>count', data).attr('nb');
+        // Badge on module
+        dotclear.badge(
+          $('#pending-posts'), {
+            id: 'dmpp',
+            value: nb,
+            remove: (nb == 0),
+            type: 'soft',
+          }
+        );
         // Store current counter
-        dotclear.dbPendingPostsCount_Counter = nb;
+        dotclear.dbPendingPostsCount_Counter = ret;
       }
     }
   });
@@ -84,28 +94,38 @@ dotclear.dmPendingCommentsCount = function() {
       // console.log($('rsp',data).attr('message'));
       window.console.log('Dotclear REST server error');
     } else {
-      var nb = $('rsp>count', data).attr('ret');
-      if (nb != dotclear.dbPendingCommentsCount_Counter) {
+      var ret = $('rsp>count', data).attr('ret');
+      if (ret != dotclear.dbPendingCommentsCount_Counter) {
         // First pass or counter changed
         var icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
         if (icon.length) {
           // Update count if exists
           var nb_label = icon.children('span.db-icon-title-dm-pending');
           if (nb_label.length) {
-            nb_label.text(nb);
+            nb_label.text(ret);
           }
         } else {
-          if (nb != '') {
+          if (ret != '') {
             // Add full element (link + counter)
-            var icon = $('#dashboard-main #icons p a[href="comments.php"]');
+            icon = $('#dashboard-main #icons p a[href="comments.php"]');
             if (icon.length) {
-              var xml = ' <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' + nb + '</span></a>';
+              var xml = ' <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' + ret + '</span></a>';
               icon.after(xml);
             }
           }
         }
+        var nb = $('rsp>count', data).attr('nb');
+        // Badge on module
+        dotclear.badge(
+          $('#pending-comments'), {
+            id: 'dmpc',
+            value: nb,
+            remove: (nb == 0),
+            type: 'soft',
+          }
+        );
         // Store current counter
-        dotclear.dbPendingCommentsCount_Counter = nb;
+        dotclear.dbPendingCommentsCount_Counter = ret;
       }
     }
   });
@@ -150,8 +170,9 @@ $(function() {
     callback: dotclear.dmPendingPostsView
   });
   $('#pending-posts ul').addClass('expandable');
+  var icon;
   if (dotclear.dmPendingPosts_Counter) {
-    var icon = $('#dashboard-main #icons p a[href="posts.php"]');
+    icon = $('#dashboard-main #icons p a[href="posts.php"]');
     if (icon.length) {
       // Icon exists on dashboard
       // First pass
@@ -166,7 +187,7 @@ $(function() {
   });
   $('#pending-comments ul').addClass('expandable');
   if (dotclear.dmPendingComments_Counter) {
-    var icon = $('#dashboard-main #icons p a[href="comments.php"]');
+    icon = $('#dashboard-main #icons p a[href="comments.php"]');
     if (icon.length) {
       // Icon exists on dashboard
       // First pass

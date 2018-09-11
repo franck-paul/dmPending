@@ -28,6 +28,7 @@ class dmPendingRest
 
         $rsp      = new xmlTag('count');
         $rsp->ret = $str;
+        $rsp->nb  = $count;
 
         return $rsp;
     }
@@ -45,6 +46,7 @@ class dmPendingRest
 
         $rsp      = new xmlTag('count');
         $rsp->ret = $str;
+        $rsp->nb  = $count;
 
         return $rsp;
     }
