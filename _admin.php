@@ -17,12 +17,12 @@ if (!defined('DC_CONTEXT_ADMIN')) {return;}
 __('Pending Dashboard Module') . __('Display pending posts and comments on dashboard');
 
 // Dashboard behaviours
-$core->addBehavior('adminDashboardContents', array('dmPendingBehaviors', 'adminDashboardContents'));
-$core->addBehavior('adminDashboardHeaders', array('dmPendingBehaviors', 'adminDashboardHeaders'));
-$core->addBehavior('adminDashboardFavsIcon', array('dmPendingBehaviors', 'adminDashboardFavsIcon'));
+$core->addBehavior('adminDashboardContents', ['dmPendingBehaviors', 'adminDashboardContents']);
+$core->addBehavior('adminDashboardHeaders', ['dmPendingBehaviors', 'adminDashboardHeaders']);
+$core->addBehavior('adminDashboardFavsIcon', ['dmPendingBehaviors', 'adminDashboardFavsIcon']);
 
-$core->addBehavior('adminAfterDashboardOptionsUpdate', array('dmPendingBehaviors', 'adminAfterDashboardOptionsUpdate'));
-$core->addBehavior('adminDashboardOptionsForm', array('dmPendingBehaviors', 'adminDashboardOptionsForm'));
+$core->addBehavior('adminAfterDashboardOptionsUpdate', ['dmPendingBehaviors', 'adminAfterDashboardOptionsUpdate']);
+$core->addBehavior('adminDashboardOptionsForm', ['dmPendingBehaviors', 'adminDashboardOptionsForm']);
 
 # BEHAVIORS
 class dmPendingBehaviors
@@ -30,7 +30,7 @@ class dmPendingBehaviors
     private static function getPendingPosts($core, $nb, $large)
     {
         // Get last $nb pending posts
-        $params = array('post_status' => -2);
+        $params = ['post_status' => -2];
         if ((integer) $nb > 0) {
             $params['limit'] = (integer) $nb;
         }
@@ -58,7 +58,7 @@ class dmPendingBehaviors
 
     private static function countPendingPosts($core)
     {
-        $count = $core->blog->getPosts(array('post_status' => -2), true)->f(0);
+        $count = $core->blog->getPosts(['post_status' => -2], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
             return '</span></a> <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
@@ -70,7 +70,7 @@ class dmPendingBehaviors
     private static function getPendingComments($core, $nb, $large)
     {
         // Get last $nb pending comments
-        $params = array('comment_status' => -1);
+        $params = ['comment_status' => -1];
         if ((integer) $nb > 0) {
             $params['limit'] = (integer) $nb;
         }
@@ -98,7 +98,7 @@ class dmPendingBehaviors
 
     private static function countPendingComments($core)
     {
-        $count = $core->blog->getComments(array('comment_status' => -1), true)->f(0);
+        $count = $core->blog->getComments(['comment_status' => -1], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
             return '</span></a> <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
@@ -152,7 +152,7 @@ class dmPendingBehaviors
                 $core->auth->user_prefs->dmpending->pending_posts_nb,
                 $core->auth->user_prefs->dmpending->pending_posts_large);
             $ret .= '</div>';
-            $contents[] = new ArrayObject(array($ret));
+            $contents[] = new ArrayObject([$ret]);
         }
         if ($core->auth->user_prefs->dmpending->pending_comments) {
             $class = ($core->auth->user_prefs->dmpending->pending_comments_large ? 'medium' : 'small');
@@ -162,7 +162,7 @@ class dmPendingBehaviors
                 $core->auth->user_prefs->dmpending->pending_comments_nb,
                 $core->auth->user_prefs->dmpending->pending_comments_large);
             $ret .= '</div>';
-            $contents[] = new ArrayObject(array($ret));
+            $contents[] = new ArrayObject([$ret]);
         }
     }
 
@@ -193,7 +193,7 @@ class dmPendingBehaviors
         // Add fieldset for plugin options
         $core->auth->user_prefs->addWorkspace('dmpending');
 
-        echo '<div class="fieldset"><h4>' . __('Pending posts on dashboard') . '</h4>' .
+        echo '<div class="fieldset" id="dmpending"><h4>' . __('Pending posts on dashboard') . '</h4>' .
 
         '<p>' .
         form::checkbox('dmpending_posts_count', 1, $core->auth->user_prefs->dmpending->pending_posts_count) . ' ' .
