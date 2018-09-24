@@ -78,7 +78,8 @@ class dmPendingBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li class="line" id="dmpc' . $rs->comment_id . '">';
+                $ret .= '<li class="line" ' . ($rs->comment_status == -2 ? ' class="sts-junk"' : '') .
+                ' id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="comment.php?id=' . $rs->comment_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $ret .= ' (' .
