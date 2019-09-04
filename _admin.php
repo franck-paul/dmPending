@@ -205,7 +205,7 @@ class dmPendingBehaviors
         '<label for="dmpending_posts" class="classic">' . __('Display pending posts') . '</label></p>' .
 
         '<p><label for="dmpending_posts_nb" class="classic">' . __('Number of pending posts to display:') . '</label>' .
-        form::field('dmpending_posts_nb', 2, 3, (integer) $core->auth->user_prefs->dmpending->pending_posts_nb) .
+        form::number('dmpending_posts_nb', 1, 999, (integer) $core->auth->user_prefs->dmpending->pending_posts_nb) .
         '</p>' .
 
         '<p>' .
@@ -225,7 +225,7 @@ class dmPendingBehaviors
         '<label for="dmpending_comments" class="classic">' . __('Display pending comments') . '</label></p>' .
 
         '<p><label for="dmpending_comments_nb" class="classic">' . __('Number of pending comments to display:') . '</label>' .
-        form::field('dmpending_comments_nb', 2, 3, (integer) $core->auth->user_prefs->dmpending->pending_comments_nb) .
+        form::number('dmpending_comments_nb', 1, 999, (integer) $core->auth->user_prefs->dmpending->pending_comments_nb) .
         '</p>' .
 
         '<p>' .
