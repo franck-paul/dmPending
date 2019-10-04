@@ -146,7 +146,7 @@ dotclear.dmPendingCommentsView = function(line, action, e) {
   action = action || 'toggle';
 
   const commentId = $(line).attr('id').substr(4);
-  const lineId = `ce${commentId}`;
+  const lineId = `dmpce${commentId}`;
   let li = document.getElementById(lineId);
 
   // If meta key down or it's a spam then display content HTML code
