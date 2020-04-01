@@ -17,12 +17,15 @@ $this->registerModule(
     "Pending Dashboard Module",                        // Name
     "Display pending posts and comments on dashboard", // Description
     "Franck Paul",                                     // Author
-    '0.5',                                             // Version
+    '0.6',                                             // Version
     [
-        'requires'    => [['core', '2.15']],
-        'permissions' => 'admin',                                 // Permissions
-        'type'        => 'plugin',                                // Type
-        'support'     => 'https://open-time.net/?q=dmPending',    // Support URL
-        'settings'    => ['pref' => '#user-favorites.dmpending'] // Settings
+        'requires'    => [['core', '2.16']],
+        'permissions' => 'admin',                              // Permissions
+        'type'        => 'plugin',                             // Type
+        'details'     => 'https://open-time.net/?q=dmPending',       // Details URL
+        'support'     => 'https://github.com/franck-paul/dmPending', // Support URL
+        'settings'    => [                                     // Settings
+            'pref' => '#user-favorites.dmpending'
+        ]
     ]
 );

@@ -115,10 +115,10 @@ class dmPendingBehaviors
         $core->auth->user_prefs->addWorkspace('dmpending');
 
         return
-        '<script type="text/javascript">' . "\n" .
-        dcPage::jsVar('dotclear.dmPendingPosts_Counter', $core->auth->user_prefs->dmpending->pending_posts_count) .
-        dcPage::jsVar('dotclear.dmPendingComments_Counter', $core->auth->user_prefs->dmpending->pending_posts_count) .
-        "</script>\n" .
+        dcPage::jsJson('dm_pending', [
+            'dmPendingPosts_Counter'    => $core->auth->user_prefs->dmpending->pending_posts_count,
+            'dmPendingComments_Counter' => $core->auth->user_prefs->dmpending->pending_posts_count
+        ]) .
         dcPage::jsLoad(urldecode(dcPage::getPF('dmPending/js/service.js')), $core->getVersion('dmPending'));
     }
 

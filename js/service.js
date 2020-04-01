@@ -1,4 +1,4 @@
-/*global $, dotclear */
+/*global $, dotclear, getData */
 'use strict';
 
 dotclear.dmPendingPostsCount = function() {
@@ -177,6 +177,7 @@ dotclear.dmPendingCommentsView = function(line, action, e) {
 };
 
 $(function() {
+  Object.assign(dotclear, getData('dm_pending'));
   $.expandContent({
     lines: $('#pending-posts li.line'),
     callback: dotclear.dmPendingPostsView
