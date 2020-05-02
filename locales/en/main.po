@@ -13,91 +13,69 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../git-plugins/dmPending/_admin.php:17
 msgid "Display pending posts and comments on dashboard"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:17
 msgid "Pending Dashboard Module"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:52
 msgid "See all pending posts"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:55
 msgid "No pending post"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:63
-#: ../git-plugins/dmPending/_services.php:27
 #, php-format
 msgid "(%d pending post)"
 msgid_plural "(%d pending posts)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../git-plugins/dmPending/_admin.php:93
 msgid "See all pending comments"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:96
 msgid "No pending comment"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:104
-#: ../git-plugins/dmPending/_services.php:45
 #, php-format
 msgid "(%d pending comment)"
 msgid_plural "(%d pending comments)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../git-plugins/dmPending/_admin.php:151
 msgid "Pending posts"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:161
 msgid "Pending comments"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:197
 msgid "Pending posts on dashboard"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:201
 msgid "Display count of pending posts on posts dashboard icon"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:205
 msgid "Display pending posts"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:207
 msgid "Number of pending posts to display:"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:213
-#: ../git-plugins/dmPending/_admin.php:233
 msgid "Small screen"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:217
 msgid "Pending comments on dashboard"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:221
 msgid "Display count of pending comments on comments dashboard icon"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:225
 msgid "Display pending comments"
 msgstr ""
 
-#: ../git-plugins/dmPending/_admin.php:227
 msgid "Number of pending comments to display:"
 msgstr ""

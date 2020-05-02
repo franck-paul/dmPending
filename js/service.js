@@ -13,7 +13,7 @@ dotclear.dmPendingPostsCount = function() {
         window.console.log('Dotclear REST server error');
       } else {
         const ret = $('rsp>count', data).attr('ret');
-        if (ret != dotclear.dbPendingPostsCount_Counter) {
+        if (ret !== undefined && ret != dotclear.dbPendingPostsCount_Counter) {
           // First pass or counter changed
           let icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
           if (icon.length) {
@@ -27,7 +27,7 @@ dotclear.dmPendingPostsCount = function() {
               // Add full element (link + counter)
               icon = $('#dashboard-main #icons p a[href="posts.php"]');
               if (icon.length) {
-                const xml = ' <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' + ret + '</span></a>';
+                const xml = ` <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">${ret}</span></a>`;
                 icon.after(xml);
               }
             }
@@ -100,7 +100,7 @@ dotclear.dmPendingCommentsCount = function() {
         window.console.log('Dotclear REST server error');
       } else {
         const ret = $('rsp>count', data).attr('ret');
-        if (ret != dotclear.dbPendingCommentsCount_Counter) {
+        if (ret !== undefined && ret != dotclear.dbPendingCommentsCount_Counter) {
           // First pass or counter changed
           let icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
           if (icon.length) {
@@ -114,7 +114,7 @@ dotclear.dmPendingCommentsCount = function() {
               // Add full element (link + counter)
               icon = $('#dashboard-main #icons p a[href="comments.php"]');
               if (icon.length) {
-                const xml = ' <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' + ret + '</span></a>';
+                const xml = ` <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">${ret}</span></a>`;
                 icon.after(xml);
               }
             }
