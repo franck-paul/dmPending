@@ -10,8 +10,9 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
-if (!defined('DC_CONTEXT_ADMIN')) {return;}
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return;
+}
 
 // dead but useful code, in order to have translations
 __('Pending Dashboard Module') . __('Display pending posts and comments on dashboard');
@@ -50,10 +51,11 @@ class dmPendingBehaviors
             }
             $ret .= '</ul>';
             $ret .= '<p><a href="posts.php?status=-2">' . __('See all pending posts') . '</a></p>';
+
             return $ret;
-        } else {
-            return '<p>' . __('No pending post') . '</p>';
         }
+
+        return '<p>' . __('No pending post') . '</p>';
     }
 
     private static function countPendingPosts($core)
@@ -61,10 +63,11 @@ class dmPendingBehaviors
         $count = $core->blog->getPosts(['post_status' => -2], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
+
             return '</span></a> <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     private static function getPendingComments($core, $nb, $large)
@@ -91,10 +94,11 @@ class dmPendingBehaviors
             }
             $ret .= '</ul>';
             $ret .= '<p><a href="comments.php?status=-1">' . __('See all pending comments') . '</a></p>';
+
             return $ret;
-        } else {
-            return '<p>' . __('No pending comment') . '</p>';
         }
+
+        return '<p>' . __('No pending comment') . '</p>';
     }
 
     private static function countPendingComments($core)
@@ -102,10 +106,11 @@ class dmPendingBehaviors
         $count = $core->blog->getComments(['comment_status' => -1], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
+
             return '</span></a> <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     public static function adminDashboardHeaders()
@@ -173,6 +178,7 @@ class dmPendingBehaviors
 
         // Get and store user's prefs for plugin options
         $core->auth->user_prefs->addWorkspace('dmpending');
+
         try {
             // Pending posts
             $core->auth->user_prefs->dmpending->put('pending_posts', !empty($_POST['dmpending_posts']), 'boolean');
