@@ -23,10 +23,12 @@ $this->registerModule(
         'requires'    => [['core', '2.19']],
         'permissions' => 'admin',                                    // Permissions
         'type'        => 'plugin',                                   // Type
-        'details'     => 'https://open-time.net/?q=dmPending',       // Details URL
-        'support'     => 'https://github.com/franck-paul/dmPending', // Support URL
         'settings'    => [                                           // Settings
             'pref' => '#user-favorites.dmpending'
-        ]
+        ],
+
+        'details'    => 'https://open-time.net/?q=dmPending',       // Details URL
+        'support'    => 'https://github.com/franck-paul/dmPending', // Support URL
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPending/main/dcstore.xml'
     ]
 );
