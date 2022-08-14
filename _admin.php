@@ -18,12 +18,12 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 __('Pending Dashboard Module') . __('Display pending posts and comments on dashboard');
 
 // Dashboard behaviours
-$core->addBehavior('adminDashboardContents', ['dmPendingBehaviors', 'adminDashboardContents']);
-$core->addBehavior('adminDashboardHeaders', ['dmPendingBehaviors', 'adminDashboardHeaders']);
-$core->addBehavior('adminDashboardFavsIcon', ['dmPendingBehaviors', 'adminDashboardFavsIcon']);
+dcCore::app()->addBehavior('adminDashboardContents', ['dmPendingBehaviors', 'adminDashboardContents']);
+dcCore::app()->addBehavior('adminDashboardHeaders', ['dmPendingBehaviors', 'adminDashboardHeaders']);
+dcCore::app()->addBehavior('adminDashboardFavsIcon', ['dmPendingBehaviors', 'adminDashboardFavsIcon']);
 
-$core->addBehavior('adminAfterDashboardOptionsUpdate', ['dmPendingBehaviors', 'adminAfterDashboardOptionsUpdate']);
-$core->addBehavior('adminDashboardOptionsForm', ['dmPendingBehaviors', 'adminDashboardOptionsForm']);
+dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', ['dmPendingBehaviors', 'adminAfterDashboardOptionsUpdate']);
+dcCore::app()->addBehavior('adminDashboardOptionsForm', ['dmPendingBehaviors', 'adminDashboardOptionsForm']);
 
 # BEHAVIORS
 class dmPendingBehaviors
@@ -32,10 +32,10 @@ class dmPendingBehaviors
     {
         // Get last $nb pending posts
         $params = ['post_status' => -2];
-        if ((integer) $nb > 0) {
-            $params['limit'] = (integer) $nb;
+        if ((int) $nb > 0) {
+            $params['limit'] = (int) $nb;
         }
-        $rs = $core->blog->getPosts($params, false);
+        $rs = dcCore::app()->blog->getPosts($params, false);
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
@@ -44,8 +44,8 @@ class dmPendingBehaviors
                 if ($large) {
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->user_id . ' ' . __('on') . ' ' .
-                    dt::dt2str($core->blog->settings->system->date_format, $rs->post_dt) . ' ' .
-                    dt::dt2str($core->blog->settings->system->time_format, $rs->post_dt) . ')';
+                    dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->post_dt) . ' ' .
+                    dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->post_dt) . ')';
                 }
                 $ret .= '</li>';
             }
@@ -60,7 +60,7 @@ class dmPendingBehaviors
 
     private static function countPendingPosts($core)
     {
-        $count = $core->blog->getPosts(['post_status' => -2], true)->f(0);
+        $count = dcCore::app()->blog->getPosts(['post_status' => -2], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
 
@@ -74,10 +74,10 @@ class dmPendingBehaviors
     {
         // Get last $nb pending comments
         $params = ['comment_status' => -1];
-        if ((integer) $nb > 0) {
-            $params['limit'] = (integer) $nb;
+        if ((int) $nb > 0) {
+            $params['limit'] = (int) $nb;
         }
-        $rs = $core->blog->getComments($params, false);
+        $rs = dcCore::app()->blog->getComments($params, false);
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
@@ -87,8 +87,8 @@ class dmPendingBehaviors
                 if ($large) {
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->comment_author . ' ' . __('on') . ' ' .
-                    dt::dt2str($core->blog->settings->system->date_format, $rs->comment_dt) . ' ' .
-                    dt::dt2str($core->blog->settings->system->time_format, $rs->comment_dt) . ')';
+                    dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->comment_dt) . ' ' .
+                    dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->comment_dt) . ')';
                 }
                 $ret .= '</li>';
             }
@@ -103,7 +103,7 @@ class dmPendingBehaviors
 
     private static function countPendingComments($core)
     {
-        $count = $core->blog->getComments(['comment_status' => -1], true)->f(0);
+        $count = dcCore::app()->blog->getComments(['comment_status' => -1], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
 
@@ -115,31 +115,29 @@ class dmPendingBehaviors
 
     public static function adminDashboardHeaders()
     {
-        global $core;
-
-        $core->auth->user_prefs->addWorkspace('dmpending');
+        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
 
         return
         dcPage::jsJson('dm_pending', [
-            'dmPendingPosts_Counter'    => $core->auth->user_prefs->dmpending->pending_posts_count,
-            'dmPendingComments_Counter' => $core->auth->user_prefs->dmpending->pending_posts_count
+            'dmPendingPosts_Counter'    => dcCore::app()->auth->user_prefs->dmpending->pending_posts_count,
+            'dmPendingComments_Counter' => dcCore::app()->auth->user_prefs->dmpending->pending_posts_count,
         ]) .
-        dcPage::jsLoad(urldecode(dcPage::getPF('dmPending/js/service.js')), $core->getVersion('dmPending'));
+        dcPage::jsModuleLoad('dmPending/js/service.js', dcCore::app()->getVersion('dmPending'));
     }
 
     public static function adminDashboardFavsIcon($core, $name, $icon)
     {
-        $core->auth->user_prefs->addWorkspace('dmpending');
-        if ($core->auth->user_prefs->dmpending->pending_posts_count && $name == 'posts') {
+        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
+        if (dcCore::app()->auth->user_prefs->dmpending->pending_posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
-            $str = dmPendingBehaviors::countPendingPosts($core);
+            $str = dmPendingBehaviors::countPendingPosts(dcCore::app());
             if ($str != '') {
                 $icon[0] .= $str;
             }
         }
-        if ($core->auth->user_prefs->dmpending->pending_comments_count && $name == 'comments') {
+        if (dcCore::app()->auth->user_prefs->dmpending->pending_comments_count && $name == 'comments') {
             // Hack comments title if there is at least one comment
-            $str = dmPendingBehaviors::countPendingComments($core);
+            $str = dmPendingBehaviors::countPendingComments(dcCore::app());
             if ($str != '') {
                 $icon[0] .= $str;
             }
@@ -149,24 +147,28 @@ class dmPendingBehaviors
     public static function adminDashboardContents($core, $contents)
     {
         // Add large modules to the contents stack
-        $core->auth->user_prefs->addWorkspace('dmpending');
-        if ($core->auth->user_prefs->dmpending->pending_posts) {
-            $class = ($core->auth->user_prefs->dmpending->pending_posts_large ? 'medium' : 'small');
+        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
+        if (dcCore::app()->auth->user_prefs->dmpending->pending_posts) {
+            $class = (dcCore::app()->auth->user_prefs->dmpending->pending_posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.png')) . '" alt="" />' . ' ' . __('Pending posts') . '</h3>';
-            $ret .= dmPendingBehaviors::getPendingPosts($core,
-                $core->auth->user_prefs->dmpending->pending_posts_nb,
-                $core->auth->user_prefs->dmpending->pending_posts_large);
+            $ret .= dmPendingBehaviors::getPendingPosts(
+                dcCore::app(),
+                dcCore::app()->auth->user_prefs->dmpending->pending_posts_nb,
+                dcCore::app()->auth->user_prefs->dmpending->pending_posts_large
+            );
             $ret .= '</div>';
             $contents[] = new ArrayObject([$ret]);
         }
-        if ($core->auth->user_prefs->dmpending->pending_comments) {
-            $class = ($core->auth->user_prefs->dmpending->pending_comments_large ? 'medium' : 'small');
+        if (dcCore::app()->auth->user_prefs->dmpending->pending_comments) {
+            $class = (dcCore::app()->auth->user_prefs->dmpending->pending_comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.png')) . '" alt="" />' . ' ' . __('Pending comments') . '</h3>';
-            $ret .= dmPendingBehaviors::getPendingComments($core,
-                $core->auth->user_prefs->dmpending->pending_comments_nb,
-                $core->auth->user_prefs->dmpending->pending_comments_large);
+            $ret .= dmPendingBehaviors::getPendingComments(
+                dcCore::app(),
+                dcCore::app()->auth->user_prefs->dmpending->pending_comments_nb,
+                dcCore::app()->auth->user_prefs->dmpending->pending_comments_large
+            );
             $ret .= '</div>';
             $contents[] = new ArrayObject([$ret]);
         }
@@ -174,48 +176,46 @@ class dmPendingBehaviors
 
     public static function adminAfterDashboardOptionsUpdate($userID)
     {
-        global $core;
-
         // Get and store user's prefs for plugin options
-        $core->auth->user_prefs->addWorkspace('dmpending');
+        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
 
         try {
             // Pending posts
-            $core->auth->user_prefs->dmpending->put('pending_posts', !empty($_POST['dmpending_posts']), 'boolean');
-            $core->auth->user_prefs->dmpending->put('pending_posts_nb', (integer) $_POST['dmpending_posts_nb'], 'integer');
-            $core->auth->user_prefs->dmpending->put('pending_posts_large', empty($_POST['dmpending_posts_small']), 'boolean');
-            $core->auth->user_prefs->dmpending->put('pending_posts_count', !empty($_POST['dmpending_posts_count']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_posts', !empty($_POST['dmpending_posts']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_posts_nb', (int) $_POST['dmpending_posts_nb'], 'integer');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_posts_large', empty($_POST['dmpending_posts_small']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_posts_count', !empty($_POST['dmpending_posts_count']), 'boolean');
             // Pending comments
-            $core->auth->user_prefs->dmpending->put('pending_comments', !empty($_POST['dmpending_comments']), 'boolean');
-            $core->auth->user_prefs->dmpending->put('pending_comments_nb', (integer) $_POST['dmpending_comments_nb'], 'integer');
-            $core->auth->user_prefs->dmpending->put('pending_comments_large', empty($_POST['dmpending_comments_small']), 'boolean');
-            $core->auth->user_prefs->dmpending->put('pending_comments_count', !empty($_POST['dmpending_comments_count']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_comments', !empty($_POST['dmpending_comments']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_comments_nb', (int) $_POST['dmpending_comments_nb'], 'integer');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_comments_large', empty($_POST['dmpending_comments_small']), 'boolean');
+            dcCore::app()->auth->user_prefs->dmpending->put('pending_comments_count', !empty($_POST['dmpending_comments_count']), 'boolean');
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
     }
 
     public static function adminDashboardOptionsForm($core)
     {
         // Add fieldset for plugin options
-        $core->auth->user_prefs->addWorkspace('dmpending');
+        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
 
         echo '<div class="fieldset" id="dmpending"><h4>' . __('Pending posts on dashboard') . '</h4>' .
 
         '<p>' .
-        form::checkbox('dmpending_posts_count', 1, $core->auth->user_prefs->dmpending->pending_posts_count) . ' ' .
+        form::checkbox('dmpending_posts_count', 1, dcCore::app()->auth->user_prefs->dmpending->pending_posts_count) . ' ' .
         '<label for="dmpending_posts_count" class="classic">' . __('Display count of pending posts on posts dashboard icon') . '</label></p>' .
 
         '<p>' .
-        form::checkbox('dmpending_posts', 1, $core->auth->user_prefs->dmpending->pending_posts) . ' ' .
+        form::checkbox('dmpending_posts', 1, dcCore::app()->auth->user_prefs->dmpending->pending_posts) . ' ' .
         '<label for="dmpending_posts" class="classic">' . __('Display pending posts') . '</label></p>' .
 
         '<p><label for="dmpending_posts_nb" class="classic">' . __('Number of pending posts to display:') . '</label>' .
-        form::number('dmpending_posts_nb', 1, 999, (integer) $core->auth->user_prefs->dmpending->pending_posts_nb) .
+        form::number('dmpending_posts_nb', 1, 999, dcCore::app()->auth->user_prefs->dmpending->pending_posts_nb) .
         '</p>' .
 
         '<p>' .
-        form::checkbox('dmpending_posts_small', 1, !$core->auth->user_prefs->dmpending->pending_posts_large) . ' ' .
+        form::checkbox('dmpending_posts_small', 1, !dcCore::app()->auth->user_prefs->dmpending->pending_posts_large) . ' ' .
         '<label for="dmpending_posts_small" class="classic">' . __('Small screen') . '</label></p>' .
 
             '</div>';
@@ -223,19 +223,19 @@ class dmPendingBehaviors
         echo '<div class="fieldset"><h4>' . __('Pending comments on dashboard') . '</h4>' .
 
         '<p>' .
-        form::checkbox('dmpending_comments_count', 1, $core->auth->user_prefs->dmpending->pending_comments_count) . ' ' .
+        form::checkbox('dmpending_comments_count', 1, dcCore::app()->auth->user_prefs->dmpending->pending_comments_count) . ' ' .
         '<label for="dmpending_comments_count" class="classic">' . __('Display count of pending comments on comments dashboard icon') . '</label></p>' .
 
         '<p>' .
-        form::checkbox('dmpending_comments', 1, $core->auth->user_prefs->dmpending->pending_comments) . ' ' .
+        form::checkbox('dmpending_comments', 1, dcCore::app()->auth->user_prefs->dmpending->pending_comments) . ' ' .
         '<label for="dmpending_comments" class="classic">' . __('Display pending comments') . '</label></p>' .
 
         '<p><label for="dmpending_comments_nb" class="classic">' . __('Number of pending comments to display:') . '</label>' .
-        form::number('dmpending_comments_nb', 1, 999, (integer) $core->auth->user_prefs->dmpending->pending_comments_nb) .
+        form::number('dmpending_comments_nb', 1, 999, dcCore::app()->auth->user_prefs->dmpending->pending_comments_nb) .
         '</p>' .
 
         '<p>' .
-        form::checkbox('dmpending_comments_small', 1, !$core->auth->user_prefs->dmpending->pending_comments_large) . ' ' .
+        form::checkbox('dmpending_comments_small', 1, !dcCore::app()->auth->user_prefs->dmpending->pending_comments_large) . ' ' .
         '<label for="dmpending_comments_small" class="classic">' . __('Small screen') . '</label></p>' .
 
             '</div>';

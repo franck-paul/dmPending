@@ -1,60 +1,57 @@
 /*global $, dotclear */
 'use strict';
 
-dotclear.dmPendingPostsCount = function () {
-  $.get('services.php', {
-    f: 'dmPendingPostsCount',
-    xd_check: dotclear.nonce,
-  })
-    .done(function (data) {
-      if ($('rsp[status=failed]', data).length > 0) {
-        // For debugging purpose only:
-        // console.log($('rsp',data).attr('message'));
-        window.console.log('Dotclear REST server error');
-      } else {
-        const ret = $('rsp>count', data).attr('ret');
-        if (ret !== undefined && ret != dotclear.dbPendingPostsCount_Counter) {
-          // First pass or counter changed
-          let icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
-          if (icon.length) {
-            // Update count if exists
-            const nb_label = icon.children('span.db-icon-title-dm-pending');
-            if (nb_label.length) {
-              nb_label.text(ret);
-            }
-          } else {
-            if (ret != '') {
+dotclear.dmPendingPostsCount = () => {
+  dotclear.services(
+    'dmPendingPostsCount',
+    (data) => {
+      const response = JSON.parse(data);
+      if (response?.success) {
+        if (response?.payload.ret) {
+          const msg = response.payload.msg;
+          if (msg !== undefined && msg != dotclear.dbPendingPostsCount_Counter) {
+            // First pass or counter changed
+            let icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
+            if (icon.length) {
+              // Update count if exists
+              const nb_label = icon.children('span.db-icon-title-dm-pending');
+              if (nb_label.length) {
+                nb_label.text(msg);
+              }
+            } else if (msg != '') {
               // Add full element (link + counter)
               icon = $('#dashboard-main #icons p a[href="posts.php"]');
               if (icon.length) {
-                const xml = ` <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">${ret}</span></a>`;
+                const xml = ` <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
                 icon.after(xml);
               }
             }
+            const nb = response.payload.nb;
+            // Badge on module
+            dotclear.badge($('#pending-posts'), {
+              id: 'dmpp',
+              value: nb,
+              remove: nb == 0,
+              type: 'soft',
+            });
+            // Store current counter
+            dotclear.dbPendingPostsCount_Counter = msg;
           }
-          const nb = $('rsp>count', data).attr('nb');
-          // Badge on module
-          dotclear.badge($('#pending-posts'), {
-            id: 'dmpp',
-            value: nb,
-            remove: nb == 0,
-            type: 'soft',
-          });
-          // Store current counter
-          dotclear.dbPendingPostsCount_Counter = ret;
         }
+      } else {
+        console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+        return;
       }
-    })
-    .fail(function (jqXHR, textStatus, errorThrown) {
-      window.console.log(`AJAX ${textStatus} (status: ${jqXHR.status} ${errorThrown})`);
-    })
-    .always(function () {
-      // Nothing here
-    });
+    },
+    (error) => {
+      console.log(error);
+    },
+    true, // Use GET method
+    { json: 1 },
+  );
 };
 
-dotclear.dmPendingPostsView = function (line, action, e) {
-  action = action || 'toggle';
+dotclear.dmPendingPostsView = (line, action = 'toggle', e = null) => {
   if ($(line).attr('id') == undefined) {
     return;
   }
@@ -63,11 +60,14 @@ dotclear.dmPendingPostsView = function (line, action, e) {
   const lineId = `dmppe${postId}`;
   let li = document.getElementById(lineId);
 
-  if (!li) {
+  if (li) {
+    $(li).toggle();
+    $(line).toggleClass('expand');
+  } else {
     // Get content
     dotclear.getEntryContent(
       postId,
-      function (content) {
+      (content) => {
         if (content) {
           li = document.createElement('li');
           li.id = lineId;
@@ -82,69 +82,81 @@ dotclear.dmPendingPostsView = function (line, action, e) {
       {
         clean: e.metaKey,
         length: 300,
-      }
+      },
     );
-  } else {
-    $(li).toggle();
-    $(line).toggleClass('expand');
   }
 };
 
-dotclear.dmPendingCommentsCount = function () {
+dotclear.dmPendingCommentsCount = () => {
+  dotclear.services(
+    'dmPendingCommentsCount',
+    (data) => {
+      const response = JSON.parse(data);
+      if (response?.success) {
+        if (response?.payload.ret) {
+          const msg = response.payload.msg;
+          if (msg !== undefined && msg != dotclear.dbPendingCommentsCount_Counter) {
+            // First pass or counter changed
+            let icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
+            if (icon.length) {
+              // Update count if exists
+              const nb_label = icon.children('span.db-icon-title-dm-pending');
+              if (nb_label.length) {
+                nb_label.text(msg);
+              }
+            } else if (ret != '') {
+              // Add full element (link + counter)
+              icon = $('#dashboard-main #icons p a[href="comments.php"]');
+              if (icon.length) {
+                const xml = ` <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
+                icon.after(xml);
+              }
+            }
+            const nb = response.payload.nb;
+            // Badge on module
+            dotclear.badge($('#pending-comments'), {
+              id: 'dmpc',
+              value: nb,
+              remove: nb == 0,
+              type: 'soft',
+            });
+            // Store current counter
+            dotclear.dbPendingCommentsCount_Counter = msg;
+          }
+        }
+      } else {
+        console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+        return;
+      }
+    },
+    (error) => {
+      console.log(error);
+    },
+    true, // Use GET method
+    { json: 1 },
+  );
+
   $.get('services.php', {
     f: 'dmPendingCommentsCount',
     xd_check: dotclear.nonce,
   })
-    .done(function (data) {
+    .done((data) => {
       if ($('rsp[status=failed]', data).length > 0) {
         // For debugging purpose only:
         // console.log($('rsp',data).attr('message'));
         window.console.log('Dotclear REST server error');
       } else {
-        const ret = $('rsp>count', data).attr('ret');
-        if (ret !== undefined && ret != dotclear.dbPendingCommentsCount_Counter) {
-          // First pass or counter changed
-          let icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
-          if (icon.length) {
-            // Update count if exists
-            const nb_label = icon.children('span.db-icon-title-dm-pending');
-            if (nb_label.length) {
-              nb_label.text(ret);
-            }
-          } else {
-            if (ret != '') {
-              // Add full element (link + counter)
-              icon = $('#dashboard-main #icons p a[href="comments.php"]');
-              if (icon.length) {
-                const xml = ` <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">${ret}</span></a>`;
-                icon.after(xml);
-              }
-            }
-          }
-          const nb = $('rsp>count', data).attr('nb');
-          // Badge on module
-          dotclear.badge($('#pending-comments'), {
-            id: 'dmpc',
-            value: nb,
-            remove: nb == 0,
-            type: 'soft',
-          });
-          // Store current counter
-          dotclear.dbPendingCommentsCount_Counter = ret;
-        }
       }
     })
-    .fail(function (jqXHR, textStatus, errorThrown) {
+    .fail((jqXHR, textStatus, errorThrown) => {
       window.console.log(`AJAX ${textStatus} (status: ${jqXHR.status} ${errorThrown})`);
     })
-    .always(function () {
+    .always(() => {
       // Nothing here
     });
 };
 
-dotclear.dmPendingCommentsView = function (line, action, e) {
-  action = action || 'toggle';
-
+dotclear.dmPendingCommentsView = (line, action = 'toggle', e = null) => {
   const commentId = $(line).attr('id').substr(4);
   const lineId = `dmpce${commentId}`;
   let li = document.getElementById(lineId);
@@ -152,11 +164,14 @@ dotclear.dmPendingCommentsView = function (line, action, e) {
   // If meta key down or it's a spam then display content HTML code
   const clean = e.metaKey || $(line).hasClass('sts-junk');
 
-  if (!li) {
+  if (li) {
+    $(li).toggle();
+    $(line).toggleClass('expand');
+  } else {
     // Get content
     dotclear.getCommentContent(
       commentId,
-      function (content) {
+      (content) => {
         if (content) {
           li = document.createElement('li');
           li.id = lineId;
@@ -170,16 +185,13 @@ dotclear.dmPendingCommentsView = function (line, action, e) {
       },
       {
         metadata: false,
-        clean: clean,
-      }
+        clean,
+      },
     );
-  } else {
-    $(li).toggle();
-    $(line).toggleClass('expand');
   }
 };
 
-$(function () {
+$(() => {
   Object.assign(dotclear, dotclear.getData('dm_pending'));
   $.expandContent({
     lines: $('#pending-posts li.line'),

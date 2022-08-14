@@ -17,38 +17,40 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 class dmPendingRest
 {
     /**
-     * Serve method to get number of pending posts for current blog.
+     * Gets the pending posts count.
      *
-     * @param     core     <b>dcCore</b>     dcCore instance
-     * @param     get     <b>array</b>     cleaned $_GET
+     * @param      array   $get    The get
+     *
+     * @return     xmlTag  The pending posts count.
      */
-    public static function getPendingPostsCount($core, $get)
+    public static function getPendingPostsCount($get)
     {
-        $count = $core->blog->getPosts(['post_status' => -2], true)->f(0);
+        $count = dcCore::app()->blog->getPosts(['post_status' => -2], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count) : '');
 
-        $rsp      = new xmlTag('count');
-        $rsp->ret = $str;
-        $rsp->nb  = $count;
-
-        return $rsp;
+        return [
+            'ret' => true,
+            'msg' => $str,
+            'nb'  => $count,
+        ];
     }
 
     /**
-     * Serve method to get number of pending comments for current blog.
+     * Gets the pending comments count.
      *
-     * @param     core     <b>dcCore</b>     dcCore instance
-     * @param     get     <b>array</b>     cleaned $_GET
+     * @param      array   $get    The get
+     *
+     * @return     xmlTag  The pending comments count.
      */
-    public static function getPendingCommentsCount($core, $get)
+    public static function getPendingCommentsCount($get)
     {
-        $count = $core->blog->getComments(['comment_status' => -1], true)->f(0);
+        $count = dcCore::app()->blog->getComments(['comment_status' => -1], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count) : '');
 
-        $rsp      = new xmlTag('count');
-        $rsp->ret = $str;
-        $rsp->nb  = $count;
-
-        return $rsp;
+        return [
+            'ret' => true,
+            'msg' => $str,
+            'nb'  => $count,
+        ];
     }
 }

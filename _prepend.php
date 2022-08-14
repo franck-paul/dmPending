@@ -22,8 +22,8 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 // Admin mode
 
-$__autoload['dmPendingRest'] = dirname(__FILE__) . '/_services.php';
+$__autoload['dmPendingRest'] = __DIR__ . '/_services.php';
 
 // Register REST methods
-$core->rest->addFunction('dmPendingPostsCount', ['dmPendingRest', 'getPendingPostsCount']);
-$core->rest->addFunction('dmPendingCommentsCount', ['dmPendingRest', 'getPendingCommentsCount']);
+dcCore::app()->rest->addFunction('dmPendingPostsCount', ['dmPendingRest', 'getPendingPostsCount']);
+dcCore::app()->rest->addFunction('dmPendingCommentsCount', ['dmPendingRest', 'getPendingCommentsCount']);
