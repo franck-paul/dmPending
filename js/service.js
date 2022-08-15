@@ -109,7 +109,7 @@ dotclear.dmPendingCommentsCount = () => {
                 if (nb_label.length) {
                   nb_label.text(msg);
                 }
-              } else if (ret != '') {
+              } else if (msg != '') {
                 // Add full element (link + counter)
                 icon = $('#dashboard-main #icons p a[href="comments.php"]');
                 if (icon.length) {
