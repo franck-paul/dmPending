@@ -5,42 +5,46 @@ dotclear.dmPendingPostsCount = () => {
   dotclear.services(
     'dmPendingPostsCount',
     (data) => {
-      const response = JSON.parse(data);
-      if (response?.success) {
-        if (response?.payload.ret) {
-          const msg = response.payload.msg;
-          if (msg !== undefined && msg != dotclear.dbPendingPostsCount_Counter) {
-            // First pass or counter changed
-            let icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
-            if (icon.length) {
-              // Update count if exists
-              const nb_label = icon.children('span.db-icon-title-dm-pending');
-              if (nb_label.length) {
-                nb_label.text(msg);
-              }
-            } else if (msg != '') {
-              // Add full element (link + counter)
-              icon = $('#dashboard-main #icons p a[href="posts.php"]');
+      try {
+        const response = JSON.parse(data);
+        if (response?.success) {
+          if (response?.payload.ret) {
+            const msg = response.payload.msg;
+            if (msg !== undefined && msg != dotclear.dbPendingPostsCount_Counter) {
+              // First pass or counter changed
+              let icon = $('#dashboard-main #icons p a[href="posts.php?status=-2"]');
               if (icon.length) {
-                const xml = ` <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
-                icon.after(xml);
+                // Update count if exists
+                const nb_label = icon.children('span.db-icon-title-dm-pending');
+                if (nb_label.length) {
+                  nb_label.text(msg);
+                }
+              } else if (msg != '') {
+                // Add full element (link + counter)
+                icon = $('#dashboard-main #icons p a[href="posts.php"]');
+                if (icon.length) {
+                  const xml = ` <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
+                  icon.after(xml);
+                }
               }
+              const nb = response.payload.nb;
+              // Badge on module
+              dotclear.badge($('#pending-posts'), {
+                id: 'dmpp',
+                value: nb,
+                remove: nb == 0,
+                type: 'soft',
+              });
+              // Store current counter
+              dotclear.dbPendingPostsCount_Counter = msg;
             }
-            const nb = response.payload.nb;
-            // Badge on module
-            dotclear.badge($('#pending-posts'), {
-              id: 'dmpp',
-              value: nb,
-              remove: nb == 0,
-              type: 'soft',
-            });
-            // Store current counter
-            dotclear.dbPendingPostsCount_Counter = msg;
           }
+        } else {
+          console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+          return;
         }
-      } else {
-        console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
-        return;
+      } catch (e) {
+        console.log(e);
       }
     },
     (error) => {
@@ -91,42 +95,46 @@ dotclear.dmPendingCommentsCount = () => {
   dotclear.services(
     'dmPendingCommentsCount',
     (data) => {
-      const response = JSON.parse(data);
-      if (response?.success) {
-        if (response?.payload.ret) {
-          const msg = response.payload.msg;
-          if (msg !== undefined && msg != dotclear.dbPendingCommentsCount_Counter) {
-            // First pass or counter changed
-            let icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
-            if (icon.length) {
-              // Update count if exists
-              const nb_label = icon.children('span.db-icon-title-dm-pending');
-              if (nb_label.length) {
-                nb_label.text(msg);
-              }
-            } else if (ret != '') {
-              // Add full element (link + counter)
-              icon = $('#dashboard-main #icons p a[href="comments.php"]');
+      try {
+        const response = JSON.parse(data);
+        if (response?.success) {
+          if (response?.payload.ret) {
+            const msg = response.payload.msg;
+            if (msg !== undefined && msg != dotclear.dbPendingCommentsCount_Counter) {
+              // First pass or counter changed
+              let icon = $('#dashboard-main #icons p a[href="comments.php?status=-1"]');
               if (icon.length) {
-                const xml = ` <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
-                icon.after(xml);
+                // Update count if exists
+                const nb_label = icon.children('span.db-icon-title-dm-pending');
+                if (nb_label.length) {
+                  nb_label.text(msg);
+                }
+              } else if (ret != '') {
+                // Add full element (link + counter)
+                icon = $('#dashboard-main #icons p a[href="comments.php"]');
+                if (icon.length) {
+                  const xml = ` <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
+                  icon.after(xml);
+                }
               }
+              const nb = response.payload.nb;
+              // Badge on module
+              dotclear.badge($('#pending-comments'), {
+                id: 'dmpc',
+                value: nb,
+                remove: nb == 0,
+                type: 'soft',
+              });
+              // Store current counter
+              dotclear.dbPendingCommentsCount_Counter = msg;
             }
-            const nb = response.payload.nb;
-            // Badge on module
-            dotclear.badge($('#pending-comments'), {
-              id: 'dmpc',
-              value: nb,
-              remove: nb == 0,
-              type: 'soft',
-            });
-            // Store current counter
-            dotclear.dbPendingCommentsCount_Counter = msg;
           }
+        } else {
+          console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
+          return;
         }
-      } else {
-        console.log(dotclear.debug && response?.message ? response.message : 'Dotclear REST server error');
-        return;
+      } catch (e) {
+        console.log(e);
       }
     },
     (error) => {
