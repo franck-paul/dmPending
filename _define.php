@@ -15,20 +15,22 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'Pending Dashboard Module',                        // Name
-    'Display pending posts and comments on dashboard', // Description
-    'Franck Paul',                                     // Author
-    '0.8.2',
+    'Pending Dashboard Module',
+    'Display pending posts and comments on dashboard',
+    'Franck Paul',
+    '0.9',
     [
-        'requires'    => [['core', '2.23']],
-        'permissions' => 'admin',                                    // Permissions
-        'type'        => 'plugin',                                   // Type
-        'settings'    => [                                           // Settings
+        'requires'    => [['core', '2.24']],
+        'permissions' => dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_ADMIN,
+        ]),
+        'type'     => 'plugin',
+        'settings' => [
             'pref' => '#user-favorites.dmpending',
         ],
 
-        'details'    => 'https://open-time.net/?q=dmPending',       // Details URL
-        'support'    => 'https://github.com/franck-paul/dmPending', // Support URL
+        'details'    => 'https://open-time.net/?q=dmPending',
+        'support'    => 'https://github.com/franck-paul/dmPending',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPending/master/dcstore.xml',
     ]
 );

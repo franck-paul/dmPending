@@ -17,21 +17,13 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 // dead but useful code, in order to have translations
 __('Pending Dashboard Module') . __('Display pending posts and comments on dashboard');
 
-// Dashboard behaviours
-dcCore::app()->addBehavior('adminDashboardContents', ['dmPendingBehaviors', 'adminDashboardContents']);
-dcCore::app()->addBehavior('adminDashboardHeaders', ['dmPendingBehaviors', 'adminDashboardHeaders']);
-dcCore::app()->addBehavior('adminDashboardFavsIcon', ['dmPendingBehaviors', 'adminDashboardFavsIcon']);
-
-dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', ['dmPendingBehaviors', 'adminAfterDashboardOptionsUpdate']);
-dcCore::app()->addBehavior('adminDashboardOptionsForm', ['dmPendingBehaviors', 'adminDashboardOptionsForm']);
-
 # BEHAVIORS
 class dmPendingBehaviors
 {
     private static function getPendingPosts($core, $nb, $large)
     {
         // Get last $nb pending posts
-        $params = ['post_status' => -2];
+        $params = ['post_status' => dcBlog::POST_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -50,7 +42,7 @@ class dmPendingBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="posts.php?status=-2">' . __('See all pending posts') . '</a></p>';
+            $ret .= '<p><a href="posts.php?status=' . dcBlog::POST_PENDING . '">' . __('See all pending posts') . '</a></p>';
 
             return $ret;
         }
@@ -58,13 +50,13 @@ class dmPendingBehaviors
         return '<p>' . __('No pending post') . '</p>';
     }
 
-    private static function countPendingPosts($core)
+    private static function countPendingPosts()
     {
-        $count = dcCore::app()->blog->getPosts(['post_status' => -2], true)->f(0);
+        $count = dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count);
 
-            return '</span></a> <a href="posts.php?status=-2"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="posts.php?status=' . dcBlog::POST_PENDING . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -73,7 +65,7 @@ class dmPendingBehaviors
     private static function getPendingComments($core, $nb, $large)
     {
         // Get last $nb pending comments
-        $params = ['comment_status' => -1];
+        $params = ['comment_status' => dcBlog::COMMENT_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -81,7 +73,7 @@ class dmPendingBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li class="line" ' . ($rs->comment_status == -2 ? ' class="sts-junk"' : '') .
+                $ret .= '<li class="line" ' . ($rs->comment_status == dcBlog::COMMENT_JUNK ? ' class="sts-junk"' : '') .
                 ' id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="comment.php?id=' . $rs->comment_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
@@ -93,7 +85,7 @@ class dmPendingBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="comments.php?status=-1">' . __('See all pending comments') . '</a></p>';
+            $ret .= '<p><a href="comments.php?status=' . dcBlog::COMMENT_PENDING . '">' . __('See all pending comments') . '</a></p>';
 
             return $ret;
         }
@@ -101,13 +93,13 @@ class dmPendingBehaviors
         return '<p>' . __('No pending comment') . '</p>';
     }
 
-    private static function countPendingComments($core)
+    private static function countPendingComments()
     {
-        $count = dcCore::app()->blog->getComments(['comment_status' => -1], true)->f(0);
+        $count = dcCore::app()->blog->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count);
 
-            return '</span></a> <a href="comments.php?status=-1"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="comments.php?status=' . dcBlog::COMMENT_PENDING . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -125,26 +117,26 @@ class dmPendingBehaviors
         dcPage::jsModuleLoad('dmPending/js/service.js', dcCore::app()->getVersion('dmPending'));
     }
 
-    public static function adminDashboardFavsIcon($core, $name, $icon)
+    public static function adminDashboardFavsIcon($name, $icon)
     {
         dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
         if (dcCore::app()->auth->user_prefs->dmpending->pending_posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
-            $str = dmPendingBehaviors::countPendingPosts(dcCore::app());
+            $str = dmPendingBehaviors::countPendingPosts();
             if ($str != '') {
                 $icon[0] .= $str;
             }
         }
         if (dcCore::app()->auth->user_prefs->dmpending->pending_comments_count && $name == 'comments') {
             // Hack comments title if there is at least one comment
-            $str = dmPendingBehaviors::countPendingComments(dcCore::app());
+            $str = dmPendingBehaviors::countPendingComments();
             if ($str != '') {
                 $icon[0] .= $str;
             }
         }
     }
 
-    public static function adminDashboardContents($core, $contents)
+    public static function adminDashboardContents($contents)
     {
         // Add large modules to the contents stack
         dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
@@ -174,7 +166,7 @@ class dmPendingBehaviors
         }
     }
 
-    public static function adminAfterDashboardOptionsUpdate($userID)
+    public static function adminAfterDashboardOptionsUpdate()
     {
         // Get and store user's prefs for plugin options
         dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
@@ -195,7 +187,7 @@ class dmPendingBehaviors
         }
     }
 
-    public static function adminDashboardOptionsForm($core)
+    public static function adminDashboardOptionsForm()
     {
         // Add fieldset for plugin options
         dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
@@ -241,3 +233,11 @@ class dmPendingBehaviors
             '</div>';
     }
 }
+
+// Dashboard behaviours
+dcCore::app()->addBehavior('adminDashboardContentsV2', [dmPendingBehaviors::class, 'adminDashboardContents']);
+dcCore::app()->addBehavior('adminDashboardHeaders', [dmPendingBehaviors::class, 'adminDashboardHeaders']);
+dcCore::app()->addBehavior('adminDashboardFavsIconV2', [dmPendingBehaviors::class, 'adminDashboardFavsIcon']);
+
+dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', [dmPendingBehaviors::class, 'adminAfterDashboardOptionsUpdate']);
+dcCore::app()->addBehavior('adminDashboardOptionsFormV2', [dmPendingBehaviors::class, 'adminDashboardOptionsForm']);

@@ -19,13 +19,11 @@ class dmPendingRest
     /**
      * Gets the pending posts count.
      *
-     * @param      array   $get    The get
-     *
-     * @return     xmlTag  The pending posts count.
+     * @return     array   The payload.
      */
-    public static function getPendingPostsCount($get)
+    public static function getPendingPostsCount(): array
     {
-        $count = dcCore::app()->blog->getPosts(['post_status' => -2], true)->f(0);
+        $count = dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count) : '');
 
         return [
@@ -38,13 +36,11 @@ class dmPendingRest
     /**
      * Gets the pending comments count.
      *
-     * @param      array   $get    The get
-     *
-     * @return     xmlTag  The pending comments count.
+     * @return     array   The payload.
      */
-    public static function getPendingCommentsCount($get)
+    public static function getPendingCommentsCount(): array
     {
-        $count = dcCore::app()->blog->getComments(['comment_status' => -1], true)->f(0);
+        $count = dcCore::app()->blog->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count) : '');
 
         return [

@@ -22,8 +22,8 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 // Admin mode
 
-$__autoload['dmPendingRest'] = __DIR__ . '/_services.php';
+Clearbricks::lib()->autoload(['dmPendingRest' => __DIR__ . '/_services.php']);
 
 // Register REST methods
-dcCore::app()->rest->addFunction('dmPendingPostsCount', ['dmPendingRest', 'getPendingPostsCount']);
-dcCore::app()->rest->addFunction('dmPendingCommentsCount', ['dmPendingRest', 'getPendingCommentsCount']);
+dcCore::app()->rest->addFunction('dmPendingPostsCount', [dmPendingRest::class, 'getPendingPostsCount']);
+dcCore::app()->rest->addFunction('dmPendingCommentsCount', [dmPendingRest::class, 'getPendingCommentsCount']);
