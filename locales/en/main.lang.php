@@ -13,12 +13,16 @@ l10n::$locales['Display pending posts and comments on dashboard'] = '';
 l10n::$locales['Pending Dashboard Module'] = '';
 l10n::$locales['See all pending posts'] = '';
 l10n::$locales['No pending post'] = '';
-l10n::$locales['(%d pending post)'][0] = '';
-l10n::$locales['(%d pending post)'][1] = '';
+l10n::$locales['(%d pending post)'] = [
+	'',
+	'',
+];
 l10n::$locales['See all pending comments'] = '';
 l10n::$locales['No pending comment'] = '';
-l10n::$locales['(%d pending comment)'][0] = '';
-l10n::$locales['(%d pending comment)'][1] = '';
+l10n::$locales['(%d pending comment)'] = [
+	'',
+	'',
+];
 l10n::$locales['Pending posts'] = '';
 l10n::$locales['Pending comments'] = '';
 l10n::$locales['Pending posts on dashboard'] = '';

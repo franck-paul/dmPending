@@ -34,10 +34,12 @@ class dmPendingBehaviors
                 $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
                 $ret .= '<a href="post.php?id=' . $rs->post_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
+                    $dt = '<time datetime="' . dt::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
-                    __('by') . ' ' . $rs->user_id . ' ' . __('on') . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->post_dt) . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->post_dt) . ')';
+                    __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->post_dt) . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->post_dt))
+                     . ')';
                 }
                 $ret .= '</li>';
             }
@@ -77,10 +79,12 @@ class dmPendingBehaviors
                 ' id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="comment.php?id=' . $rs->comment_id . '">' . $rs->post_title . '</a>';
                 if ($large) {
+                    $dt = '<time datetime="' . dt::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
-                    __('by') . ' ' . $rs->comment_author . ' ' . __('on') . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->comment_dt) . ' ' .
-                    dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->comment_dt) . ')';
+                    __('by') . ' ' . $rs->comment_author . ' ' . sprintf($dt, __('on') . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->date_format, $rs->comment_dt) . ' ' .
+                        dt::dt2str(dcCore::app()->blog->settings->system->time_format, $rs->comment_dt)) .
+                    ')';
                 }
                 $ret .= '</li>';
             }
@@ -107,8 +111,6 @@ class dmPendingBehaviors
 
     public static function adminDashboardHeaders()
     {
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
-
         return
         dcPage::jsJson('dm_pending', [
             'dmPendingPosts_Counter'    => dcCore::app()->auth->user_prefs->dmpending->pending_posts_count,
@@ -119,7 +121,6 @@ class dmPendingBehaviors
 
     public static function adminDashboardFavsIcon($name, $icon)
     {
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
         if (dcCore::app()->auth->user_prefs->dmpending->pending_posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
             $str = dmPendingBehaviors::countPendingPosts();
@@ -139,7 +140,6 @@ class dmPendingBehaviors
     public static function adminDashboardContents($contents)
     {
         // Add large modules to the contents stack
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
         if (dcCore::app()->auth->user_prefs->dmpending->pending_posts) {
             $class = (dcCore::app()->auth->user_prefs->dmpending->pending_posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
@@ -169,8 +169,6 @@ class dmPendingBehaviors
     public static function adminAfterDashboardOptionsUpdate()
     {
         // Get and store user's prefs for plugin options
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
-
         try {
             // Pending posts
             dcCore::app()->auth->user_prefs->dmpending->put('pending_posts', !empty($_POST['dmpending_posts']), 'boolean');
@@ -190,7 +188,6 @@ class dmPendingBehaviors
     public static function adminDashboardOptionsForm()
     {
         // Add fieldset for plugin options
-        dcCore::app()->auth->user_prefs->addWorkspace('dmpending');
 
         echo '<div class="fieldset" id="dmpending"><h4>' . __('Pending posts on dashboard') . '</h4>' .
 
@@ -235,9 +232,11 @@ class dmPendingBehaviors
 }
 
 // Dashboard behaviours
-dcCore::app()->addBehavior('adminDashboardContentsV2', [dmPendingBehaviors::class, 'adminDashboardContents']);
-dcCore::app()->addBehavior('adminDashboardHeaders', [dmPendingBehaviors::class, 'adminDashboardHeaders']);
-dcCore::app()->addBehavior('adminDashboardFavsIconV2', [dmPendingBehaviors::class, 'adminDashboardFavsIcon']);
+dcCore::app()->addBehaviors([
+    'adminDashboardContentsV2'         => [dmPendingBehaviors::class, 'adminDashboardContents'],
+    'adminDashboardHeaders'            => [dmPendingBehaviors::class, 'adminDashboardHeaders'],
+    'adminDashboardFavsIconV2'         => [dmPendingBehaviors::class, 'adminDashboardFavsIcon'],
 
-dcCore::app()->addBehavior('adminAfterDashboardOptionsUpdate', [dmPendingBehaviors::class, 'adminAfterDashboardOptionsUpdate']);
-dcCore::app()->addBehavior('adminDashboardOptionsFormV2', [dmPendingBehaviors::class, 'adminDashboardOptionsForm']);
+    'adminAfterDashboardOptionsUpdate' => [dmPendingBehaviors::class, 'adminAfterDashboardOptionsUpdate'],
+    'adminDashboardOptionsFormV2'      => [dmPendingBehaviors::class, 'adminDashboardOptionsForm'],
+]);

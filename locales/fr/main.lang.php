@@ -13,12 +13,16 @@ l10n::$locales['Display pending posts and comments on dashboard'] = 'Affiche les
 l10n::$locales['Pending Dashboard Module'] = 'Module d\'affichage des billets et commentaires en attente';
 l10n::$locales['See all pending posts'] = 'Voir tous les billets en attente';
 l10n::$locales['No pending post'] = 'Aucun billet en attente';
-l10n::$locales['(%d pending post)'][0] = '(dont %d en attente)';
-l10n::$locales['(%d pending post)'][1] = '(dont %d en attente)';
+l10n::$locales['(%d pending post)'] = [
+	'(dont %d en attente)',
+	'(dont %d en attente)',
+];
 l10n::$locales['See all pending comments'] = 'Voir tous les commentaires en attente';
 l10n::$locales['No pending comment'] = 'Aucun commentaire en attente';
-l10n::$locales['(%d pending comment)'][0] = '(dont %d en attente)';
-l10n::$locales['(%d pending comment)'][1] = '(dont %d en attente)';
+l10n::$locales['(%d pending comment)'] = [
+	'(dont %d en attente)',
+	'(dont %d en attente)',
+];
 l10n::$locales['Pending posts'] = 'Billets en attente';
 l10n::$locales['Pending comments'] = 'Commentaires en attente';
 l10n::$locales['Pending posts on dashboard'] = 'Billets en attente sur le tableau de bord';
