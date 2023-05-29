@@ -10,11 +10,14 @@
  * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
+declare(strict_types=1);
 
-class dmPendingRest
+namespace Dotclear\Plugin\dmPending;
+
+use dcBlog;
+use dcCore;
+
+class BackendRest
 {
     /**
      * Gets the pending posts count.
