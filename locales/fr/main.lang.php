@@ -18,10 +18,12 @@ L10n::$locales['No pending post'] = 'Aucun billet en attente';
 L10n::$locales['(%d pending post)'] = [
 	'(dont %d en attente)',
 	'(dont %d en attente)',
+	'(dont %d en attente)',
 ];
 L10n::$locales['See all pending comments'] = 'Voir tous les commentaires en attente';
 L10n::$locales['No pending comment'] = 'Aucun commentaire en attente';
 L10n::$locales['(%d pending comment)'] = [
+	'(dont %d en attente)',
 	'(dont %d en attente)',
 	'(dont %d en attente)',
 ];
