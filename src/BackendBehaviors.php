@@ -225,7 +225,7 @@ class BackendBehaviors
                     ->label((new Label(__('Number of pending posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_posts_small', $preferences->posts_large))
+                (new Checkbox('dmpending_posts_small', !$preferences->posts_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
@@ -251,7 +251,7 @@ class BackendBehaviors
                     ->label((new Label(__('Number of pending comments to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_comments_small', $preferences->comments_large))
+                (new Checkbox('dmpending_comments_small', !$preferences->comments_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
