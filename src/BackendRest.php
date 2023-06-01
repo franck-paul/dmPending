@@ -27,7 +27,7 @@ class BackendRest
     public static function getPendingPostsCount(): array
     {
         $count = dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
-        $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count) : '');
+        $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), $count) : '');
 
         return [
             'ret' => true,
@@ -44,7 +44,7 @@ class BackendRest
     public static function getPendingCommentsCount(): array
     {
         $count = dcCore::app()->blog->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
-        $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count) : '');
+        $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), $count) : '');
 
         return [
             'ret' => true,
