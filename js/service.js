@@ -143,24 +143,6 @@ dotclear.dmPendingCommentsCount = (icon) => {
     true, // Use GET method
     { json: 1 },
   );
-
-  $.get('services.php', {
-    f: 'dmPendingCommentsCount',
-    xd_check: dotclear.nonce,
-  })
-    .done((data) => {
-      if ($('rsp[status=failed]', data).length > 0) {
-        // For debugging purpose only:
-        // console.log($('rsp',data).attr('message'));
-        window.console.log('Dotclear REST server error');
-      }
-    })
-    .fail((jqXHR, textStatus, errorThrown) => {
-      window.console.log(`AJAX ${textStatus} (status: ${jqXHR.status} ${errorThrown})`);
-    })
-    .always(() => {
-      // Nothing here
-    });
 };
 
 dotclear.dmPendingCommentsView = (line, action = 'toggle', e = null) => {
