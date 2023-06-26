@@ -12,7 +12,7 @@ dotclear.dmPendingPostsCount = (icon) => {
             const { msg } = response.payload;
             if (msg !== undefined && msg != dotclear.dbPendingPostsCount_Counter) {
               const href = icon.attr('href');
-              const param = `${href.includes('?') ? '&' : '?'}status=-1`;
+              const param = `${href.includes('?') ? '&' : '?'}status=-2`;
               const url = `${href}${param}`;
               // First pass or counter changed
               const link = $(`#dashboard-main #icons p a[href="${url}"]`);
