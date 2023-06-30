@@ -157,7 +157,7 @@ class BackendBehaviors
         if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.png')) . '" alt="" />' . ' ' . __('Pending posts') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
             $ret .= BackendBehaviors::getPendingPosts(
                 dcCore::app(),
                 $preferences->posts_nb,
@@ -169,7 +169,7 @@ class BackendBehaviors
         if ($preferences->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.png')) . '" alt="" />' . ' ' . __('Pending comments') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
             $ret .= BackendBehaviors::getPendingComments(
                 dcCore::app(),
                 $preferences->comments_nb,
