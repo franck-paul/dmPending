@@ -197,7 +197,11 @@ $(() => {
       // First pass
       dotclear.dmPendingPostsCount(icon);
       // Then fired every 60 seconds
-      dotclear.dbPendingPostsCount_Timer = setInterval(dotclear.dmPendingPostsCount, 60 * 1000, icon);
+      dotclear.dbPendingPostsCount_Timer = setInterval(
+        dotclear.dmPendingPostsCount,
+        (dotclear.dmPending_Interval || 60) * 1000,
+        icon,
+      );
     }
   }
   $.expandContent({
@@ -217,6 +221,10 @@ $(() => {
     // First pass
     dotclear.dmPendingCommentsCount(icon);
     // Then fired every 60 seconds
-    dotclear.dbPendingCommentsCount_Timer = setInterval(dotclear.dmPendingCommentsCount, 60 * 1000, icon);
+    dotclear.dbPendingCommentsCount_Timer = setInterval(
+      dotclear.dmPendingCommentsCount,
+      (dotclear.dmPending_Interval || 60) * 1000,
+      icon,
+    );
   }
 });

@@ -26,6 +26,7 @@ use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Text;
 use Exception;
 
 class BackendBehaviors
@@ -126,7 +127,8 @@ class BackendBehaviors
         return
         dcPage::jsJson('dm_pending', [
             'dmPendingPosts_Counter'    => $preferences->posts_count,
-            'dmPendingComments_Counter' => $preferences->posts_count,
+            'dmPendingComments_Counter' => $preferences->comments_count,
+            'dmPending_Interval'        => ($preferences->interval ?? 60),
         ]) .
         dcPage::jsModuleLoad('dmPending/js/service.js', dcCore::app()->getVersion('dmPending'));
     }
@@ -195,6 +197,8 @@ class BackendBehaviors
             $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], dcWorkspace::WS_INT);
             $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), dcWorkspace::WS_BOOL);
             $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), dcWorkspace::WS_BOOL);
+            // Interval
+            $preferences->put('interval', (int) $_POST['dmpending_interval'], dcWorkspace::WS_INT);
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
@@ -208,8 +212,9 @@ class BackendBehaviors
 
         echo
         (new Fieldset('dmpending'))
-        ->legend((new Legend(__('Pending posts on dashboard'))))
+        ->legend((new Legend(__('Pending posts and comments on dashboard'))))
         ->fields([
+            (new Text('h5', __('Pending posts'))),
             (new Para())->items([
                 (new Checkbox('dmpending_posts_count', $preferences->posts_count))
                     ->value(1)
@@ -229,13 +234,8 @@ class BackendBehaviors
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
-        ])
-        ->render();
-
-        echo
-        (new Fieldset('dmpending_bis'))
-        ->legend((new Legend(__('Pending comments on dashboard'))))
-        ->fields([
+            (new Text(null, '<hr />')),
+            (new Text('h5', __('Pending comments'))),
             (new Para())->items([
                 (new Checkbox('dmpending_comments_count', $preferences->comments_count))
                     ->value(1)
@@ -254,6 +254,11 @@ class BackendBehaviors
                 (new Checkbox('dmpending_comments_small', !$preferences->comments_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
+            ]),
+            (new Text(null, '<hr />')),
+            (new Para())->items([
+                (new Number('dmpending_interval', 0, 9_999_999, $preferences->interval))
+                    ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])
         ->render();
