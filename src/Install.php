@@ -65,7 +65,7 @@ class Install extends dcNsProcess
             $preferences->put('comments', false, dcWorkspace::WS_BOOL, 'Display pending comments', false, true);
             $preferences->put('comments_nb', 5, dcWorkspace::WS_INT, 'Number of pending comments displayed', false, true);
             $preferences->put('comments_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-            $preferences->put('interval', 60, 'integer', 'Interval between two refreshes', false, true);
+            $preferences->put('interval', 60, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
