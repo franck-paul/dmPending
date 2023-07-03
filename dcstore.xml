@@ -1,10 +1,10 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="dmPending">
     <name>Pending Dashboard Module</name>
-    <version>2.3</version>
+    <version>2.4</version>
     <author>Franck Paul</author>
     <desc>Display pending posts and comments on dashboard</desc>
-    <file>https://github.com/franck-paul/dmPending/releases/download/2.3/plugin-dmPending-2.3.zip</file>
+    <file>https://github.com/franck-paul/dmPending/releases/download/2.4/plugin-dmPending-2.4.zip</file>
     <da:dcmin>2.26</da:dcmin>
     <da:details>https://open-time.net/?q=dmPending</da:details>
     <da:support>https://github.com/franck-paul/dmPending</da:support>
