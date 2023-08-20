@@ -17,8 +17,8 @@ namespace Dotclear\Plugin\dmPending;
 use ArrayObject;
 use dcBlog;
 use dcCore;
-use dcPage;
 use dcWorkspace;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
@@ -43,7 +43,7 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -55,7 +55,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
 
             return $ret;
         }
@@ -69,7 +69,7 @@ class BackendBehaviors
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -88,7 +88,7 @@ class BackendBehaviors
             while ($rs->fetch()) {
                 $ret .= '<li class="line" ' . ($rs->comment_status == dcBlog::COMMENT_JUNK ? ' class="sts-junk"' : '') .
                 ' id="dmpc' . $rs->comment_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -100,7 +100,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
 
             return $ret;
         }
@@ -114,7 +114,7 @@ class BackendBehaviors
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . dcCore::app()->admin->url->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -125,12 +125,12 @@ class BackendBehaviors
         $preferences = dcCore::app()->auth->user_prefs->get(My::id());
 
         return
-        dcPage::jsJson('dm_pending', [
+        Page::jsJson('dm_pending', [
             'dmPendingPosts_Counter'    => $preferences->posts_count,
             'dmPendingComments_Counter' => $preferences->comments_count,
             'dmPending_Interval'        => ($preferences->interval ?? 60),
         ]) .
-        dcPage::jsModuleLoad('dmPending/js/service.js', dcCore::app()->getVersion('dmPending'));
+        My::jsLoad('service.js');
     }
 
     public static function adminDashboardFavsIcon($name, $icon)
@@ -159,7 +159,7 @@ class BackendBehaviors
         if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
             $ret .= BackendBehaviors::getPendingPosts(
                 dcCore::app(),
                 $preferences->posts_nb,
@@ -171,7 +171,7 @@ class BackendBehaviors
         if ($preferences->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(dcPage::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
             $ret .= BackendBehaviors::getPendingComments(
                 dcCore::app(),
                 $preferences->comments_nb,
@@ -185,6 +185,7 @@ class BackendBehaviors
     public static function adminAfterDashboardOptionsUpdate()
     {
         $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+
         // Get and store user's prefs for plugin options
         try {
             // Pending posts

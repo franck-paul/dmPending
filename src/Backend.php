@@ -15,40 +15,37 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dmPending;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
-
         // dead but useful code, in order to have translations
         __('Pending Dashboard Module') . __('Display pending posts and comments on dashboard');
 
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
         // Dashboard behaviours
         dcCore::app()->addBehaviors([
-            'adminDashboardContentsV2' => [BackendBehaviors::class, 'adminDashboardContents'],
-            'adminDashboardHeaders'    => [BackendBehaviors::class, 'adminDashboardHeaders'],
-            'adminDashboardFavsIconV2' => [BackendBehaviors::class, 'adminDashboardFavsIcon'],
+            'adminDashboardContentsV2' => BackendBehaviors::adminDashboardContents(...),
+            'adminDashboardHeaders'    => BackendBehaviors::adminDashboardHeaders(...),
+            'adminDashboardFavsIconV2' => BackendBehaviors::adminDashboardFavsIcon(...),
 
-            'adminAfterDashboardOptionsUpdate' => [BackendBehaviors::class, 'adminAfterDashboardOptionsUpdate'],
-            'adminDashboardOptionsFormV2'      => [BackendBehaviors::class, 'adminDashboardOptionsForm'],
+            'adminAfterDashboardOptionsUpdate' => BackendBehaviors::adminAfterDashboardOptionsUpdate(...),
+            'adminDashboardOptionsFormV2'      => BackendBehaviors::adminDashboardOptionsForm(...),
         ]);
 
         // Register REST methods
-        dcCore::app()->rest->addFunction('dmPendingPostsCount', [BackendRest::class, 'getPendingPostsCount']);
-        dcCore::app()->rest->addFunction('dmPendingCommentsCount', [BackendRest::class, 'getPendingCommentsCount']);
+        dcCore::app()->rest->addFunction('dmPendingPostsCount', BackendRest::getPendingPostsCount(...));
+        dcCore::app()->rest->addFunction('dmPendingCommentsCount', BackendRest::getPendingCommentsCount(...));
 
         return true;
     }
