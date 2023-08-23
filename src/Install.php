@@ -48,14 +48,14 @@ class Install extends Process
                     }
                 };
 
-                $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+                $preferences = My::prefs();
                 foreach (['posts', 'posts_nb', 'posts_large', 'comments', 'comments_nb', 'comments_large'] as $pref) {
                     $rename($pref, $preferences);
                 }
             }
 
             // Default prefs for pending posts and comments
-            $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+            $preferences = My::prefs();
             $preferences->put('posts', false, dcWorkspace::WS_BOOL, 'Display pending posts', false, true);
             $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of pending posts displayed', false, true);
             $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);

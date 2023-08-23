@@ -122,7 +122,7 @@ class BackendBehaviors
 
     public static function adminDashboardHeaders()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         return
         Page::jsJson('dm_pending', [
@@ -135,7 +135,7 @@ class BackendBehaviors
 
     public static function adminDashboardFavsIcon($name, $icon)
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
         if ($preferences->posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
             $str = BackendBehaviors::countPendingPosts();
@@ -154,7 +154,7 @@ class BackendBehaviors
 
     public static function adminDashboardContents($contents)
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
         // Add large modules to the contents stack
         if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
@@ -184,7 +184,7 @@ class BackendBehaviors
 
     public static function adminAfterDashboardOptionsUpdate()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         // Get and store user's prefs for plugin options
         try {
@@ -207,7 +207,7 @@ class BackendBehaviors
 
     public static function adminDashboardOptionsForm()
     {
-        $preferences = dcCore::app()->auth->user_prefs->get(My::id());
+        $preferences = My::prefs();
 
         // Add fieldset for plugin options
 
