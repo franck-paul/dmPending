@@ -22,7 +22,7 @@ class BackendRest
     /**
      * Gets the pending posts count.
      *
-     * @return     array   The payload.
+     * @return     array<string, mixed>   The payload.
      */
     public static function getPendingPostsCount(): array
     {
@@ -39,7 +39,7 @@ class BackendRest
     /**
      * Gets the pending comments count.
      *
-     * @return     array   The payload.
+     * @return     array<string, mixed>   The payload.
      */
     public static function getPendingCommentsCount(): array
     {

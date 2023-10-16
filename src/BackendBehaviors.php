@@ -31,7 +31,7 @@ use Exception;
 
 class BackendBehaviors
 {
-    private static function getPendingPosts($core, $nb, $large)
+    private static function getPendingPosts(int $nb, bool $large): string
     {
         // Get last $nb pending posts
         $params = ['post_status' => dcBlog::POST_PENDING];
@@ -43,7 +43,7 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -55,7 +55,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
 
             return $ret;
         }
@@ -63,19 +63,19 @@ class BackendBehaviors
         return '<p>' . __('No pending post') . '</p>';
     }
 
-    private static function countPendingPosts()
+    private static function countPendingPosts(): string
     {
         $count = dcCore::app()->blog->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->admin->url->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
     }
 
-    private static function getPendingComments($core, $nb, $large)
+    private static function getPendingComments(int $nb, bool $large): string
     {
         // Get last $nb pending comments
         $params = ['comment_status' => dcBlog::COMMENT_PENDING];
@@ -88,7 +88,7 @@ class BackendBehaviors
             while ($rs->fetch()) {
                 $ret .= '<li class="line" ' . ($rs->comment_status == dcBlog::COMMENT_JUNK ? ' class="sts-junk"' : '') .
                 ' id="dmpc' . $rs->comment_id . '">';
-                $ret .= '<a href="' . dcCore::app()->admin->url->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
                     $dt = '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
@@ -100,7 +100,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->admin->url->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
+            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
 
             return $ret;
         }
@@ -108,19 +108,19 @@ class BackendBehaviors
         return '<p>' . __('No pending comment') . '</p>';
     }
 
-    private static function countPendingComments()
+    private static function countPendingComments(): string
     {
         $count = dcCore::app()->blog->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->admin->url->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
     }
 
-    public static function adminDashboardHeaders()
+    public static function adminDashboardHeaders(): string
     {
         $preferences = My::prefs();
 
@@ -133,7 +133,13 @@ class BackendBehaviors
         My::jsLoad('service.js');
     }
 
-    public static function adminDashboardFavsIcon($name, $icon)
+    /**
+     * @param      string                       $name   The name
+     * @param      ArrayObject<string, mixed>   $icon   The icon
+     *
+     * @return     string
+     */
+    public static function adminDashboardFavsIcon(string $name, ArrayObject $icon): string
     {
         $preferences = My::prefs();
         if ($preferences->posts_count && $name == 'posts') {
@@ -150,9 +156,16 @@ class BackendBehaviors
                 $icon[0] .= $str;
             }
         }
+
+        return '';
     }
 
-    public static function adminDashboardContents($contents)
+    /**
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
+     *
+     * @return     string
+     */
+    public static function adminDashboardContents(ArrayObject $contents): string
     {
         $preferences = My::prefs();
         // Add large modules to the contents stack
@@ -161,7 +174,6 @@ class BackendBehaviors
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
             $ret .= BackendBehaviors::getPendingPosts(
-                dcCore::app(),
                 $preferences->posts_nb,
                 $preferences->posts_large
             );
@@ -173,16 +185,17 @@ class BackendBehaviors
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
             $ret .= BackendBehaviors::getPendingComments(
-                dcCore::app(),
                 $preferences->comments_nb,
                 $preferences->comments_large
             );
             $ret .= '</div>';
             $contents[] = new ArrayObject([$ret]);
         }
+
+        return '';
     }
 
-    public static function adminAfterDashboardOptionsUpdate()
+    public static function adminAfterDashboardOptionsUpdate(): string
     {
         $preferences = My::prefs();
 
@@ -203,9 +216,11 @@ class BackendBehaviors
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
+
+        return '';
     }
 
-    public static function adminDashboardOptionsForm()
+    public static function adminDashboardOptionsForm(): string
     {
         $preferences = My::prefs();
 
@@ -263,5 +278,7 @@ class BackendBehaviors
             ]),
         ])
         ->render();
+
+        return '';
     }
 }
