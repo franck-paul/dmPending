@@ -49,20 +49,24 @@ class Install extends Process
                 };
 
                 $preferences = My::prefs();
-                foreach (['posts', 'posts_nb', 'posts_large', 'comments', 'comments_nb', 'comments_large'] as $pref) {
-                    $rename($pref, $preferences);
+                if ($preferences) {
+                    foreach (['posts', 'posts_nb', 'posts_large', 'comments', 'comments_nb', 'comments_large'] as $pref) {
+                        $rename($pref, $preferences);
+                    }
                 }
             }
 
             // Default prefs for pending posts and comments
             $preferences = My::prefs();
-            $preferences->put('posts', false, dcWorkspace::WS_BOOL, 'Display pending posts', false, true);
-            $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of pending posts displayed', false, true);
-            $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-            $preferences->put('comments', false, dcWorkspace::WS_BOOL, 'Display pending comments', false, true);
-            $preferences->put('comments_nb', 5, dcWorkspace::WS_INT, 'Number of pending comments displayed', false, true);
-            $preferences->put('comments_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-            $preferences->put('interval', 60, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
+            if ($preferences) {
+                $preferences->put('posts', false, dcWorkspace::WS_BOOL, 'Display pending posts', false, true);
+                $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of pending posts displayed', false, true);
+                $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
+                $preferences->put('comments', false, dcWorkspace::WS_BOOL, 'Display pending comments', false, true);
+                $preferences->put('comments_nb', 5, dcWorkspace::WS_INT, 'Number of pending comments displayed', false, true);
+                $preferences->put('comments_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
+                $preferences->put('interval', 60, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
+            }
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
