@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\dmPending;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Backend extends Process
@@ -34,7 +34,7 @@ class Backend extends Process
         }
 
         // Dashboard behaviours
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'adminDashboardContentsV2' => BackendBehaviors::adminDashboardContents(...),
             'adminDashboardHeaders'    => BackendBehaviors::adminDashboardHeaders(...),
             'adminDashboardFavsIconV2' => BackendBehaviors::adminDashboardFavsIcon(...),
@@ -44,8 +44,8 @@ class Backend extends Process
         ]);
 
         // Register REST methods
-        dcCore::app()->rest->addFunction('dmPendingPostsCount', BackendRest::getPendingPostsCount(...));
-        dcCore::app()->rest->addFunction('dmPendingCommentsCount', BackendRest::getPendingCommentsCount(...));
+        App::rest()->addFunction('dmPendingPostsCount', BackendRest::getPendingPostsCount(...));
+        App::rest()->addFunction('dmPendingCommentsCount', BackendRest::getPendingCommentsCount(...));
 
         return true;
     }

@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\dmPending;
 
-use dcCore;
-use dcWorkspace;
+use Dotclear\App;
 use Dotclear\Core\Process;
+use Dotclear\Interface\Core\UserWorkspaceInterface;
 use Exception;
 
 class Install extends Process
@@ -34,15 +34,15 @@ class Install extends Process
 
         try {
             // Update
-            $old_version = dcCore::app()->getVersion(My::id());
+            $old_version = App::version()->getVersion(My::id());
             if (version_compare((string) $old_version, '2.0', '<')) {
                 // Rename settings workspace
-                if (dcCore::app()->auth->user_prefs->exists('dmpending')) {
-                    dcCore::app()->auth->user_prefs->delWorkspace(My::id());
-                    dcCore::app()->auth->user_prefs->renWorkspace('dmpending', My::id());
+                if (App::auth()->prefs()->exists('dmpending')) {
+                    App::auth()->prefs()->delWorkspace(My::id());
+                    App::auth()->prefs()->renWorkspace('dmpending', My::id());
                 }
                 // Change settings names (remove pending_ prefix in them)
-                $rename = function (string $name, dcWorkspace $preferences): void {
+                $rename = function (string $name, UserWorkspaceInterface $preferences): void {
                     if ($preferences->prefExists('pending_' . $name, true)) {
                         $preferences->rename('pending_' . $name, $name);
                     }
@@ -59,16 +59,16 @@ class Install extends Process
             // Default prefs for pending posts and comments
             $preferences = My::prefs();
             if ($preferences) {
-                $preferences->put('posts', false, dcWorkspace::WS_BOOL, 'Display pending posts', false, true);
-                $preferences->put('posts_nb', 5, dcWorkspace::WS_INT, 'Number of pending posts displayed', false, true);
-                $preferences->put('posts_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-                $preferences->put('comments', false, dcWorkspace::WS_BOOL, 'Display pending comments', false, true);
-                $preferences->put('comments_nb', 5, dcWorkspace::WS_INT, 'Number of pending comments displayed', false, true);
-                $preferences->put('comments_large', true, dcWorkspace::WS_BOOL, 'Large display', false, true);
-                $preferences->put('interval', 60, dcWorkspace::WS_INT, 'Interval between two refreshes', false, true);
+                $preferences->put('posts', false, App::userWorkspace()::WS_BOOL, 'Display pending posts', false, true);
+                $preferences->put('posts_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending posts displayed', false, true);
+                $preferences->put('posts_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
+                $preferences->put('comments', false, App::userWorkspace()::WS_BOOL, 'Display pending comments', false, true);
+                $preferences->put('comments_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending comments displayed', false, true);
+                $preferences->put('comments_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
+                $preferences->put('interval', 60, App::userWorkspace()::WS_INT, 'Interval between two refreshes', false, true);
             }
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         return true;

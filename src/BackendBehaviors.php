@@ -15,9 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\dmPending;
 
 use ArrayObject;
-use dcBlog;
-use dcCore;
-use dcWorkspace;
 use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Date;
@@ -28,6 +25,7 @@ use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Interface\Core\BlogInterface;
 use Exception;
 
 class BackendBehaviors
@@ -35,7 +33,7 @@ class BackendBehaviors
     private static function getPendingPosts(int $nb, bool $large): string
     {
         // Get last $nb pending posts
-        $params = ['post_status' => dcBlog::POST_PENDING];
+        $params = ['post_status' => BlogInterface::POST_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -44,9 +42,9 @@ class BackendBehaviors
             $ret = '<ul>';
             while ($rs->fetch()) {
                 $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . App::backend()->url()->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
+                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
                         Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
@@ -56,7 +54,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
 
             return $ret;
         }
@@ -66,11 +64,11 @@ class BackendBehaviors
 
     private static function countPendingPosts(): string
     {
-        $count = App::blog()->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
+        $count = App::blog()->getPosts(['post_status' => BlogInterface::POST_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.posts', ['status' => dcBlog::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -79,7 +77,7 @@ class BackendBehaviors
     private static function getPendingComments(int $nb, bool $large): string
     {
         // Get last $nb pending comments
-        $params = ['comment_status' => dcBlog::COMMENT_PENDING];
+        $params = ['comment_status' => BlogInterface::COMMENT_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -87,11 +85,11 @@ class BackendBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li class="line" ' . ($rs->comment_status == dcBlog::COMMENT_JUNK ? ' class="sts-junk"' : '') .
+                $ret .= '<li class="line" ' . ($rs->comment_status == BlogInterface::COMMENT_JUNK ? ' class="sts-junk"' : '') .
                 ' id="dmpc' . $rs->comment_id . '">';
-                $ret .= '<a href="' . dcCore::app()->adminurl->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
+                $ret .= '<a href="' . App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), dcCore::app()->auth->getInfo('user_tz')) . '">%s</time>';
+                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->comment_author . ' ' . sprintf($dt, __('on') . ' ' .
                         Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
@@ -101,7 +99,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => BlogInterface::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
 
             return $ret;
         }
@@ -111,11 +109,11 @@ class BackendBehaviors
 
     private static function countPendingComments(): string
     {
-        $count = App::blog()->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
+        $count = App::blog()->getComments(['comment_status' => BlogInterface::COMMENT_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . dcCore::app()->adminurl->get('admin.comments', ['status' => dcBlog::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . App::backend()->url()->get('admin.comments', ['status' => BlogInterface::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -204,19 +202,19 @@ class BackendBehaviors
         if ($preferences) {
             try {
                 // Pending posts
-                $preferences->put('posts', !empty($_POST['dmpending_posts']), dcWorkspace::WS_BOOL);
-                $preferences->put('posts_nb', (int) $_POST['dmpending_posts_nb'], dcWorkspace::WS_INT);
-                $preferences->put('posts_large', empty($_POST['dmpending_posts_small']), dcWorkspace::WS_BOOL);
-                $preferences->put('posts_count', !empty($_POST['dmpending_posts_count']), dcWorkspace::WS_BOOL);
+                $preferences->put('posts', !empty($_POST['dmpending_posts']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('posts_nb', (int) $_POST['dmpending_posts_nb'], App::userWorkspace()::WS_INT);
+                $preferences->put('posts_large', empty($_POST['dmpending_posts_small']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('posts_count', !empty($_POST['dmpending_posts_count']), App::userWorkspace()::WS_BOOL);
                 // Pending comments
-                $preferences->put('comments', !empty($_POST['dmpending_comments']), dcWorkspace::WS_BOOL);
-                $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], dcWorkspace::WS_INT);
-                $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), dcWorkspace::WS_BOOL);
-                $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), dcWorkspace::WS_BOOL);
+                $preferences->put('comments', !empty($_POST['dmpending_comments']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], App::userWorkspace()::WS_INT);
+                $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), App::userWorkspace()::WS_BOOL);
+                $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), App::userWorkspace()::WS_BOOL);
                 // Interval
-                $preferences->put('interval', (int) $_POST['dmpending_interval'], dcWorkspace::WS_INT);
+                $preferences->put('interval', (int) $_POST['dmpending_interval'], App::userWorkspace()::WS_INT);
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 

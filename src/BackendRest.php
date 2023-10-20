@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\dmPending;
 
-use dcBlog;
 use Dotclear\App;
+use Dotclear\Interface\Core\BlogInterface;
 
 class BackendRest
 {
@@ -26,7 +26,7 @@ class BackendRest
      */
     public static function getPendingPostsCount(): array
     {
-        $count = App::blog()->getPosts(['post_status' => dcBlog::POST_PENDING], true)->f(0);
+        $count = App::blog()->getPosts(['post_status' => BlogInterface::POST_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), $count) : '');
 
         return [
@@ -43,7 +43,7 @@ class BackendRest
      */
     public static function getPendingCommentsCount(): array
     {
-        $count = App::blog()->getComments(['comment_status' => dcBlog::COMMENT_PENDING], true)->f(0);
+        $count = App::blog()->getComments(['comment_status' => BlogInterface::COMMENT_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), $count) : '');
 
         return [
