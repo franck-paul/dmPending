@@ -44,7 +44,7 @@ class BackendBehaviors
                 $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
                 $ret .= '<a href="' . App::backend()->url()->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
+                    $dt = '<time datetime="' . Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
                         Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
@@ -89,7 +89,7 @@ class BackendBehaviors
                 ' id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="' . App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601(strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
+                    $dt = '<time datetime="' . Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
                     $ret .= ' (' .
                     __('by') . ' ' . $rs->comment_author . ' ' . sprintf($dt, __('on') . ' ' .
                         Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
