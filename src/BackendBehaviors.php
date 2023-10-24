@@ -25,7 +25,6 @@ use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Text;
-use Dotclear\Interface\Core\BlogInterface;
 use Exception;
 
 class BackendBehaviors
@@ -33,7 +32,7 @@ class BackendBehaviors
     private static function getPendingPosts(int $nb, bool $large): string
     {
         // Get last $nb pending posts
-        $params = ['post_status' => BlogInterface::POST_PENDING];
+        $params = ['post_status' => App::blog()::POST_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -54,7 +53,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
 
             return $ret;
         }
@@ -64,11 +63,11 @@ class BackendBehaviors
 
     private static function countPendingPosts(): string
     {
-        $count = App::blog()->getPosts(['post_status' => BlogInterface::POST_PENDING], true)->f(0);
+        $count = App::blog()->getPosts(['post_status' => App::blog()::POST_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . App::backend()->url()->get('admin.posts', ['status' => BlogInterface::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
@@ -77,7 +76,7 @@ class BackendBehaviors
     private static function getPendingComments(int $nb, bool $large): string
     {
         // Get last $nb pending comments
-        $params = ['comment_status' => BlogInterface::COMMENT_PENDING];
+        $params = ['comment_status' => App::blog()::COMMENT_PENDING];
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
@@ -85,7 +84,7 @@ class BackendBehaviors
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
             while ($rs->fetch()) {
-                $ret .= '<li class="line" ' . ($rs->comment_status == BlogInterface::COMMENT_JUNK ? ' class="sts-junk"' : '') .
+                $ret .= '<li class="line" ' . ($rs->comment_status == App::blog()::COMMENT_JUNK ? ' class="sts-junk"' : '') .
                 ' id="dmpc' . $rs->comment_id . '">';
                 $ret .= '<a href="' . App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
                 if ($large) {
@@ -99,7 +98,7 @@ class BackendBehaviors
                 $ret .= '</li>';
             }
             $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => BlogInterface::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
+            $ret .= '<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => App::blog()::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
 
             return $ret;
         }
@@ -109,11 +108,11 @@ class BackendBehaviors
 
     private static function countPendingComments(): string
     {
-        $count = App::blog()->getComments(['comment_status' => BlogInterface::COMMENT_PENDING], true)->f(0);
+        $count = App::blog()->getComments(['comment_status' => App::blog()::COMMENT_PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
 
-            return '</span></a> <a href="' . App::backend()->url()->get('admin.comments', ['status' => BlogInterface::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+            return '</span></a> <a href="' . App::backend()->url()->get('admin.comments', ['status' => App::blog()::COMMENT_PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
         }
 
         return '';
