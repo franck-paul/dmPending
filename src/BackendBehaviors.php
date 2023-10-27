@@ -36,6 +36,7 @@ class BackendBehaviors
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
+
         $rs = App::blog()->getPosts($params, false);
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
@@ -50,12 +51,13 @@ class BackendBehaviors
                         Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt))
                      . ')';
                 }
+
                 $ret .= '</li>';
             }
-            $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>';
 
-            return $ret;
+            $ret .= '</ul>';
+
+            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::blog()::POST_PENDING]) . '">' . __('See all pending posts') . '</a></p>');
         }
 
         return '<p>' . __('No pending post') . '</p>';
@@ -80,6 +82,7 @@ class BackendBehaviors
         if ((int) $nb > 0) {
             $params['limit'] = (int) $nb;
         }
+
         $rs = App::blog()->getComments($params);
         if (!$rs->isEmpty()) {
             $ret = '<ul>';
@@ -95,12 +98,13 @@ class BackendBehaviors
                         Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt)) .
                     ')';
                 }
+
                 $ret .= '</li>';
             }
-            $ret .= '</ul>';
-            $ret .= '<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => App::blog()::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>';
 
-            return $ret;
+            $ret .= '</ul>';
+
+            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => App::blog()::COMMENT_PENDING]) . '">' . __('See all pending comments') . '</a></p>');
         }
 
         return '<p>' . __('No pending comment') . '</p>';
@@ -142,14 +146,15 @@ class BackendBehaviors
         $preferences = My::prefs();
         if ($preferences?->posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
-            $str = BackendBehaviors::countPendingPosts();
+            $str = self::countPendingPosts();
             if ($str != '') {
                 $icon[0] .= $str;
             }
         }
+
         if ($preferences?->comments_count && $name == 'comments') {
             // Hack comments title if there is at least one comment
-            $str = BackendBehaviors::countPendingComments();
+            $str = self::countPendingComments();
             if ($str != '') {
                 $icon[0] .= $str;
             }
@@ -171,18 +176,19 @@ class BackendBehaviors
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
-            $ret .= BackendBehaviors::getPendingPosts(
+            $ret .= self::getPendingPosts(
                 $preferences->posts_nb,
                 $preferences->posts_large
             );
             $ret .= '</div>';
             $contents[] = new ArrayObject([$ret]);
         }
+
         if ($preferences?->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
-            $ret .= BackendBehaviors::getPendingComments(
+            $ret .= self::getPendingComments(
                 $preferences->comments_nb,
                 $preferences->comments_large
             );

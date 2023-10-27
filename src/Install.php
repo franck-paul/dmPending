@@ -41,8 +41,9 @@ class Install extends Process
                     App::auth()->prefs()->delWorkspace(My::id());
                     App::auth()->prefs()->renWorkspace('dmpending', My::id());
                 }
+
                 // Change settings names (remove pending_ prefix in them)
-                $rename = function (string $name, UserWorkspaceInterface $preferences): void {
+                $rename = static function (string $name, UserWorkspaceInterface $preferences) : void {
                     if ($preferences->prefExists('pending_' . $name, true)) {
                         $preferences->rename('pending_' . $name, $name);
                     }
@@ -67,8 +68,8 @@ class Install extends Process
                 $preferences->put('comments_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
                 $preferences->put('interval', 60, App::userWorkspace()::WS_INT, 'Interval between two refreshes', false, true);
             }
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         return true;
