@@ -130,7 +130,7 @@ class BackendBehaviors
         Page::jsJson('dm_pending', [
             'dmPendingPosts_Counter'    => $preferences?->posts_count,
             'dmPendingComments_Counter' => $preferences?->comments_count,
-            'dmPending_Interval'        => ($preferences?->interval ?? 60),
+            'dmPending_Interval'        => ($preferences->interval ?? 60),
         ]) .
         My::jsLoad('service.js');
     }
