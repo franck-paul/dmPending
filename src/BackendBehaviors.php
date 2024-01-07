@@ -164,7 +164,7 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
+     * @param      ArrayObject<int, ArrayObject<int, non-falsy-string>>  $contents  The contents
      *
      * @return     string
      */
@@ -175,25 +175,25 @@ class BackendBehaviors
         if ($preferences?->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending posts') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending posts') . '</h3>';
             $ret .= self::getPendingPosts(
                 $preferences->posts_nb,
                 $preferences->posts_large
             );
             $ret .= '</div>';
-            $contents[] = new ArrayObject([$ret]);
+            $contents->append(new ArrayObject([$ret]));
         }
 
         if ($preferences?->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small" />' . ' ' . __('Pending comments') . '</h3>';
+            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending comments') . '</h3>';
             $ret .= self::getPendingComments(
                 $preferences->comments_nb,
                 $preferences->comments_large
             );
             $ret .= '</div>';
-            $contents[] = new ArrayObject([$ret]);
+            $contents->append(new ArrayObject([$ret]));
         }
 
         return '';
@@ -256,7 +256,7 @@ class BackendBehaviors
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
-            (new Text(null, '<hr />')),
+            (new Text(null, '<hr>')),
             (new Text('h5', __('Pending comments'))),
             (new Para())->items([
                 (new Checkbox('dmpending_comments_count', $preferences?->comments_count))
@@ -277,7 +277,7 @@ class BackendBehaviors
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
-            (new Text(null, '<hr />')),
+            (new Text(null, '<hr>')),
             (new Para())->items([
                 (new Number('dmpending_interval', 0, 9_999_999, $preferences?->interval))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
