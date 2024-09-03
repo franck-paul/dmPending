@@ -36,4 +36,5 @@ L10n::$locales['Small screen'] = 'Affichage abrégé';
 L10n::$locales['Display count of pending comments on comments dashboard icon'] = 'Afficher le nombre de commentaires en attente sur le favori des commentaires du tableau de bord';
 L10n::$locales['Display pending comments'] = 'Afficher les commentaires en attente';
 L10n::$locales['Number of pending comments to display:'] = 'Nombre de commentaires en attente à afficher :';
+L10n::$locales['Auto refresh'] = 'Rafraîchissement automatique';
 L10n::$locales['Interval in seconds between two refreshes:'] = 'Intervalle en secondes entre deux rafraichissements :';

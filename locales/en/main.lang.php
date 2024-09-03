@@ -34,4 +34,5 @@ L10n::$locales['Small screen'] = '';
 L10n::$locales['Display count of pending comments on comments dashboard icon'] = '';
 L10n::$locales['Display pending comments'] = '';
 L10n::$locales['Number of pending comments to display:'] = '';
+L10n::$locales['Auto refresh'] = '';
 L10n::$locales['Interval in seconds between two refreshes:'] = '';
