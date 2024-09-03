@@ -130,6 +130,7 @@ class BackendBehaviors
         Page::jsJson('dm_pending', [
             'dmPendingPosts_Counter'    => $preferences?->posts_count,
             'dmPendingComments_Counter' => $preferences?->comments_count,
+            'dmPending_AutoRefresh'     => $preferences?->autorefresh,
             'dmPending_Interval'        => ($preferences->interval ?? 60),
         ]) .
         My::jsLoad('service.js');
@@ -217,6 +218,7 @@ class BackendBehaviors
                 $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), App::userWorkspace()::WS_BOOL);
                 $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), App::userWorkspace()::WS_BOOL);
                 // Interval
+                $preferences->put('autorefresh', !empty($_POST['dmpending_autorefresh']), App::userWorkspace()::WS_BOOL);
                 $preferences->put('interval', (int) $_POST['dmpending_interval'], App::userWorkspace()::WS_INT);
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -278,6 +280,11 @@ class BackendBehaviors
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Text(null, '<hr>')),
+            (new Para())->items([
+                (new Checkbox('dmpending_autorefresh', $preferences?->autorefresh))
+                    ->value(1)
+                    ->label((new Label(__('Auto refresh'), Label::INSIDE_TEXT_AFTER))),
+            ]),
             (new Para())->items([
                 (new Number('dmpending_interval', 0, 9_999_999, $preferences?->interval))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),

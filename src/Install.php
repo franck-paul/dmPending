@@ -43,7 +43,7 @@ class Install extends Process
                 }
 
                 // Change settings names (remove pending_ prefix in them)
-                $rename = static function (string $name, UserWorkspaceInterface $preferences) : void {
+                $rename = static function (string $name, UserWorkspaceInterface $preferences): void {
                     if ($preferences->prefExists('pending_' . $name, true)) {
                         $preferences->rename('pending_' . $name, $name);
                     }
@@ -66,6 +66,7 @@ class Install extends Process
                 $preferences->put('comments', false, App::userWorkspace()::WS_BOOL, 'Display pending comments', false, true);
                 $preferences->put('comments_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending comments displayed', false, true);
                 $preferences->put('comments_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
+                $preferences->put('autorefresh', false, App::userWorkspace()::WS_BOOL, 'Auto refresh', false, true);
                 $preferences->put('interval', 60, App::userWorkspace()::WS_INT, 'Interval between two refreshes', false, true);
             }
         } catch (Exception $exception) {

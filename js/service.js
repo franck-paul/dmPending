@@ -60,7 +60,7 @@ dotclear.dmPendingPostsView = (line, action = 'toggle', e = null) => {
     return;
   }
 
-  const postId = $(line).attr('id').substr(4);
+  const postId = $(line).attr('id').substring(4);
   const lineId = `dmppe${postId}`;
   let li = document.getElementById(lineId);
 
@@ -146,7 +146,7 @@ dotclear.dmPendingCommentsCount = (icon) => {
 };
 
 dotclear.dmPendingCommentsView = (line, action = 'toggle', e = null) => {
-  const commentId = $(line).attr('id').substr(4);
+  const commentId = $(line).attr('id').substring(4);
   const lineId = `dmpce${commentId}`;
   let li = document.getElementById(lineId);
 
@@ -182,11 +182,22 @@ dotclear.dmPendingCommentsView = (line, action = 'toggle', e = null) => {
 
 $(() => {
   Object.assign(dotclear, dotclear.getData('dm_pending'));
+
   $.expandContent({
     lines: $('#pending-posts li.line'),
     callback: dotclear.dmPendingPostsView,
   });
   $('#pending-posts ul').addClass('expandable');
+  $.expandContent({
+    lines: $('#pending-comments li.line'),
+    callback: dotclear.dmPendingCommentsView,
+  });
+  $('#pending-comments ul').addClass('expandable');
+
+  if (!dotclear.dmPending_AutoRefresh) {
+    return;
+  }
+
   if (dotclear.dmPendingPosts_Counter) {
     let icon = $('#dashboard-main #icons p a[href="posts.php"]');
     if (!icon.length) {
@@ -203,14 +214,6 @@ $(() => {
         icon,
       );
     }
-  }
-  $.expandContent({
-    lines: $('#pending-comments li.line'),
-    callback: dotclear.dmPendingCommentsView,
-  });
-  $('#pending-comments ul').addClass('expandable');
-  if (!dotclear.dmPendingComments_Counter) {
-    return;
   }
   let icon = $('#dashboard-main #icons p a[href="comments.php"]');
   if (!icon.length) {
