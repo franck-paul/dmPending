@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPending, a plugin for Dotclear 2
  *
@@ -14,9 +15,9 @@ $this->registerModule(
     'Pending Dashboard Module',
     'Display pending posts and comments on dashboard',
     'Franck Paul',
-    '4.4',
+    '4.5',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.31']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'settings'    => [
