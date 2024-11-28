@@ -10,7 +10,7 @@ dotclear.dmPendingPostsCount = (icon) => {
         if (response?.success) {
           if (response?.payload.ret) {
             const { msg } = response.payload;
-            if (msg !== undefined && msg != dotclear.dbPendingPostsCount_Counter) {
+            if (msg !== undefined && msg !== dotclear.dbPendingPostsCount_Counter) {
               const href = icon.attr('href');
               const param = `${href.includes('?') ? '&' : '?'}status=-2`;
               const url = `${href}${param}`;
@@ -22,7 +22,7 @@ dotclear.dmPendingPostsCount = (icon) => {
                 if (nb_label.length) {
                   nb_label.text(msg);
                 }
-              } else if (msg != '' && icon.length) {
+              } else if (msg !== '' && icon.length) {
                 // Add full element (link + counter)
                 const xml = ` <a href="${url}"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
                 icon.after(xml);
@@ -32,7 +32,7 @@ dotclear.dmPendingPostsCount = (icon) => {
               dotclear.badge($('#pending-posts'), {
                 id: 'dmpp',
                 value: nb,
-                remove: nb == 0,
+                remove: nb === 0,
                 type: 'soft',
               });
               // Store current counter
@@ -56,7 +56,7 @@ dotclear.dmPendingPostsCount = (icon) => {
 };
 
 dotclear.dmPendingPostsView = (line, action = 'toggle', e = null) => {
-  if ($(line).attr('id') == undefined) {
+  if ($(line).attr('id') === undefined) {
     return;
   }
 
@@ -100,7 +100,7 @@ dotclear.dmPendingCommentsCount = (icon) => {
         if (response?.success) {
           if (response?.payload.ret) {
             const { msg } = response.payload;
-            if (msg !== undefined && msg != dotclear.dbPendingCommentsCount_Counter) {
+            if (msg !== undefined && msg !== dotclear.dbPendingCommentsCount_Counter) {
               const href = icon.attr('href');
               const param = `${href.includes('?') ? '&' : '?'}status=-1`;
               const url = `${href}${param}`;
@@ -112,7 +112,7 @@ dotclear.dmPendingCommentsCount = (icon) => {
                 if (nb_label.length) {
                   nb_label.text(msg);
                 }
-              } else if (msg != '') {
+              } else if (msg !== '') {
                 // Add full element (link + counter)
                 const xml = ` <a href="${url}"><span class="db-icon-title-dm-pending">${msg}</span></a>`;
                 icon.after(xml);
@@ -122,7 +122,7 @@ dotclear.dmPendingCommentsCount = (icon) => {
               dotclear.badge($('#pending-comments'), {
                 id: 'dmpc',
                 value: nb,
-                remove: nb == 0,
+                remove: nb === 0,
                 type: 'soft',
               });
               // Store current counter
@@ -180,7 +180,7 @@ dotclear.dmPendingCommentsView = (line, action = 'toggle', e = null) => {
   }
 };
 
-$(() => {
+dotclear.ready(() => {
   Object.assign(dotclear, dotclear.getData('dm_pending'));
 
   $.expandContent({
@@ -215,19 +215,21 @@ $(() => {
       );
     }
   }
-  let icon = $('#dashboard-main #icons p a[href="comments.php"]');
-  if (!icon.length) {
-    icon = $('#dashboard-main #icons p #icon-process-comments-fav');
-  }
-  if (icon.length) {
-    // Icon exists on dashboard
-    // First pass
-    dotclear.dmPendingCommentsCount(icon);
-    // Then fired every 60 seconds
-    dotclear.dbPendingCommentsCount_Timer = setInterval(
-      dotclear.dmPendingCommentsCount,
-      (dotclear.dmPending_Interval || 60) * 1000,
-      icon,
-    );
+  if (dotclear.dmPendingComments_Counter) {
+    let icon = $('#dashboard-main #icons p a[href="comments.php"]');
+    if (!icon.length) {
+      icon = $('#dashboard-main #icons p #icon-process-comments-fav');
+    }
+    if (icon.length) {
+      // Icon exists on dashboard
+      // First pass
+      dotclear.dmPendingCommentsCount(icon);
+      // Then fired every 60 seconds
+      dotclear.dbPendingCommentsCount_Timer = setInterval(
+        dotclear.dmPendingCommentsCount,
+        (dotclear.dmPending_Interval || 60) * 1000,
+        icon,
+      );
+    }
   }
 });
