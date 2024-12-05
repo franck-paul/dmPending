@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPending, a plugin for Dotclear 2
  *
@@ -128,9 +129,9 @@ class BackendBehaviors
 
         return
         Page::jsJson('dm_pending', [
-            'dmPendingPosts_Counter'    => $preferences?->posts_count,
-            'dmPendingComments_Counter' => $preferences?->comments_count,
-            'dmPending_AutoRefresh'     => $preferences?->autorefresh,
+            'dmPendingPosts_Counter'    => $preferences->posts_count,
+            'dmPendingComments_Counter' => $preferences->comments_count,
+            'dmPending_AutoRefresh'     => $preferences->autorefresh,
             'dmPending_Interval'        => ($preferences->interval ?? 60),
         ]) .
         My::jsLoad('service.js');
@@ -145,7 +146,7 @@ class BackendBehaviors
     public static function adminDashboardFavsIcon(string $name, ArrayObject $icon): string
     {
         $preferences = My::prefs();
-        if ($preferences?->posts_count && $name == 'posts') {
+        if ($preferences->posts_count && $name == 'posts') {
             // Hack posts title if there is at least one pending post
             $str = self::countPendingPosts();
             if ($str != '') {
@@ -153,7 +154,7 @@ class BackendBehaviors
             }
         }
 
-        if ($preferences?->comments_count && $name == 'comments') {
+        if ($preferences->comments_count && $name == 'comments') {
             // Hack comments title if there is at least one comment
             $str = self::countPendingComments();
             if ($str != '') {
@@ -173,7 +174,7 @@ class BackendBehaviors
     {
         $preferences = My::prefs();
         // Add large modules to the contents stack
-        if ($preferences?->posts) {
+        if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
             $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending posts') . '</h3>';
@@ -185,7 +186,7 @@ class BackendBehaviors
             $contents->append(new ArrayObject([$ret]));
         }
 
-        if ($preferences?->comments) {
+        if ($preferences->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
             $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
             '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending comments') . '</h3>';
@@ -205,24 +206,22 @@ class BackendBehaviors
         $preferences = My::prefs();
 
         // Get and store user's prefs for plugin options
-        if ($preferences) {
-            try {
-                // Pending posts
-                $preferences->put('posts', !empty($_POST['dmpending_posts']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('posts_nb', (int) $_POST['dmpending_posts_nb'], App::userWorkspace()::WS_INT);
-                $preferences->put('posts_large', empty($_POST['dmpending_posts_small']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('posts_count', !empty($_POST['dmpending_posts_count']), App::userWorkspace()::WS_BOOL);
-                // Pending comments
-                $preferences->put('comments', !empty($_POST['dmpending_comments']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], App::userWorkspace()::WS_INT);
-                $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), App::userWorkspace()::WS_BOOL);
-                // Interval
-                $preferences->put('autorefresh', !empty($_POST['dmpending_autorefresh']), App::userWorkspace()::WS_BOOL);
-                $preferences->put('interval', (int) $_POST['dmpending_interval'], App::userWorkspace()::WS_INT);
-            } catch (Exception $e) {
-                App::error()->add($e->getMessage());
-            }
+        try {
+            // Pending posts
+            $preferences->put('posts', !empty($_POST['dmpending_posts']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_nb', (int) $_POST['dmpending_posts_nb'], App::userWorkspace()::WS_INT);
+            $preferences->put('posts_large', empty($_POST['dmpending_posts_small']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_count', !empty($_POST['dmpending_posts_count']), App::userWorkspace()::WS_BOOL);
+            // Pending comments
+            $preferences->put('comments', !empty($_POST['dmpending_comments']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], App::userWorkspace()::WS_INT);
+            $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), App::userWorkspace()::WS_BOOL);
+            // Interval
+            $preferences->put('autorefresh', !empty($_POST['dmpending_autorefresh']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('interval', (int) $_POST['dmpending_interval'], App::userWorkspace()::WS_INT);
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
         }
 
         return '';
@@ -240,53 +239,53 @@ class BackendBehaviors
         ->fields([
             (new Text('h5', __('Pending posts'))),
             (new Para())->items([
-                (new Checkbox('dmpending_posts_count', $preferences?->posts_count))
+                (new Checkbox('dmpending_posts_count', $preferences->posts_count))
                     ->value(1)
                     ->label((new Label(__('Display count of pending posts on posts dashboard icon'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_posts', $preferences?->posts))
+                (new Checkbox('dmpending_posts', $preferences->posts))
                     ->value(1)
                     ->label((new Label(__('Display pending posts'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_posts_nb', 1, 999, $preferences?->posts_nb))
+                (new Number('dmpending_posts_nb', 1, 999, $preferences->posts_nb))
                     ->label((new Label(__('Number of pending posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_posts_small', !$preferences?->posts_large))
+                (new Checkbox('dmpending_posts_small', !$preferences->posts_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Text(null, '<hr>')),
             (new Text('h5', __('Pending comments'))),
             (new Para())->items([
-                (new Checkbox('dmpending_comments_count', $preferences?->comments_count))
+                (new Checkbox('dmpending_comments_count', $preferences->comments_count))
                     ->value(1)
                     ->label((new Label(__('Display count of pending comments on comments dashboard icon'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_comments', $preferences?->comments))
+                (new Checkbox('dmpending_comments', $preferences->comments))
                     ->value(1)
                     ->label((new Label(__('Display pending comments'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_comments_nb', 1, 999, $preferences?->comments_nb))
+                (new Number('dmpending_comments_nb', 1, 999, $preferences->comments_nb))
                     ->label((new Label(__('Number of pending comments to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_comments_small', !$preferences?->comments_large))
+                (new Checkbox('dmpending_comments_small', !$preferences->comments_large))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Text(null, '<hr>')),
             (new Para())->items([
-                (new Checkbox('dmpending_autorefresh', $preferences?->autorefresh))
+                (new Checkbox('dmpending_autorefresh', $preferences->autorefresh))
                     ->value(1)
                     ->label((new Label(__('Auto refresh'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_interval', 0, 9_999_999, $preferences?->interval))
+                (new Number('dmpending_interval', 0, 9_999_999, $preferences->interval))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])

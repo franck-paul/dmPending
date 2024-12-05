@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPending, a plugin for Dotclear 2
  *
@@ -50,25 +51,21 @@ class Install extends Process
                 };
 
                 $preferences = My::prefs();
-                if ($preferences) {
-                    foreach (['posts', 'posts_nb', 'posts_large', 'comments', 'comments_nb', 'comments_large'] as $pref) {
-                        $rename($pref, $preferences);
-                    }
+                foreach (['posts', 'posts_nb', 'posts_large', 'comments', 'comments_nb', 'comments_large'] as $pref) {
+                    $rename($pref, $preferences);
                 }
             }
 
             // Default prefs for pending posts and comments
             $preferences = My::prefs();
-            if ($preferences) {
-                $preferences->put('posts', false, App::userWorkspace()::WS_BOOL, 'Display pending posts', false, true);
-                $preferences->put('posts_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending posts displayed', false, true);
-                $preferences->put('posts_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
-                $preferences->put('comments', false, App::userWorkspace()::WS_BOOL, 'Display pending comments', false, true);
-                $preferences->put('comments_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending comments displayed', false, true);
-                $preferences->put('comments_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
-                $preferences->put('autorefresh', false, App::userWorkspace()::WS_BOOL, 'Auto refresh', false, true);
-                $preferences->put('interval', 60, App::userWorkspace()::WS_INT, 'Interval between two refreshes', false, true);
-            }
+            $preferences->put('posts', false, App::userWorkspace()::WS_BOOL, 'Display pending posts', false, true);
+            $preferences->put('posts_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending posts displayed', false, true);
+            $preferences->put('posts_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
+            $preferences->put('comments', false, App::userWorkspace()::WS_BOOL, 'Display pending comments', false, true);
+            $preferences->put('comments_nb', 5, App::userWorkspace()::WS_INT, 'Number of pending comments displayed', false, true);
+            $preferences->put('comments_large', true, App::userWorkspace()::WS_BOOL, 'Large display', false, true);
+            $preferences->put('autorefresh', false, App::userWorkspace()::WS_BOOL, 'Auto refresh', false, true);
+            $preferences->put('interval', 60, App::userWorkspace()::WS_INT, 'Interval between two refreshes', false, true);
         } catch (Exception $exception) {
             App::error()->add($exception->getMessage());
         }
