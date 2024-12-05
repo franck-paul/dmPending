@@ -15,7 +15,7 @@ $this->registerModule(
     'Pending Dashboard Module',
     'Display pending posts and comments on dashboard',
     'Franck Paul',
-    '4.5',
+    '4.6',
     [
         'requires'    => [['core', '2.31']],
         'permissions' => 'My',
