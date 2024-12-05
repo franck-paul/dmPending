@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief dmPending, a plugin for Dotclear 2
  *
@@ -25,7 +26,7 @@ class BackendRest
      */
     public static function getPendingPostsCount(): array
     {
-        $count = App::blog()->getPosts(['post_status' => App::blog()::POST_PENDING], true)->f(0);
+        $count = (int) App::blog()->getPosts(['post_status' => App::blog()::POST_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), $count) : '');
 
         return [
@@ -42,7 +43,7 @@ class BackendRest
      */
     public static function getPendingCommentsCount(): array
     {
-        $count = App::blog()->getComments(['comment_status' => App::blog()::COMMENT_PENDING], true)->f(0);
+        $count = (int) App::blog()->getComments(['comment_status' => App::blog()::COMMENT_PENDING], true)->f(0);
         $str   = ($count ? sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), $count) : '');
 
         return [

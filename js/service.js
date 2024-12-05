@@ -32,7 +32,7 @@ dotclear.dmPendingPostsCount = (icon) => {
               dotclear.badge($('#pending-posts'), {
                 id: 'dmpp',
                 value: nb,
-                remove: nb === 0,
+                remove: nb <= 0,
                 type: 'soft',
               });
               // Store current counter
@@ -122,7 +122,7 @@ dotclear.dmPendingCommentsCount = (icon) => {
               dotclear.badge($('#pending-comments'), {
                 id: 'dmpc',
                 value: nb,
-                remove: nb === 0,
+                remove: nb <= 0,
                 type: 'soft',
               });
               // Store current counter
