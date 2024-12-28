@@ -34,8 +34,8 @@ class BackendBehaviors
     {
         // Get last $nb pending posts
         $params = ['post_status' => App::blog()::POST_PENDING];
-        if ((int) $nb > 0) {
-            $params['limit'] = (int) $nb;
+        if ($nb > 0) {
+            $params['limit'] = $nb;
         }
 
         $rs = App::blog()->getPosts($params, false);
@@ -80,8 +80,8 @@ class BackendBehaviors
     {
         // Get last $nb pending comments
         $params = ['comment_status' => App::blog()::COMMENT_PENDING];
-        if ((int) $nb > 0) {
-            $params['limit'] = (int) $nb;
+        if ($nb > 0) {
+            $params['limit'] = $nb;
         }
 
         $rs = App::blog()->getComments($params);
@@ -140,24 +140,22 @@ class BackendBehaviors
     /**
      * @param      string                       $name   The name
      * @param      ArrayObject<string, mixed>   $icon   The icon
-     *
-     * @return     string
      */
     public static function adminDashboardFavsIcon(string $name, ArrayObject $icon): string
     {
         $preferences = My::prefs();
-        if ($preferences->posts_count && $name == 'posts') {
+        if ($preferences->posts_count && $name === 'posts') {
             // Hack posts title if there is at least one pending post
             $str = self::countPendingPosts();
-            if ($str != '') {
+            if ($str !== '') {
                 $icon[0] .= $str;
             }
         }
 
-        if ($preferences->comments_count && $name == 'comments') {
+        if ($preferences->comments_count && $name === 'comments') {
             // Hack comments title if there is at least one comment
             $str = self::countPendingComments();
-            if ($str != '') {
+            if ($str !== '') {
                 $icon[0] .= $str;
             }
         }
@@ -167,8 +165,6 @@ class BackendBehaviors
 
     /**
      * @param      ArrayObject<int, ArrayObject<int, non-falsy-string>>  $contents  The contents
-     *
-     * @return     string
      */
     public static function adminDashboardContents(ArrayObject $contents): string
     {
