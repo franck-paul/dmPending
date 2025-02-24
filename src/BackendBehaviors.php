@@ -18,14 +18,22 @@ namespace Dotclear\Plugin\dmPending;
 use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Backend\Page;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Img;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Li;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\Note;
 use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Ul;
 use Exception;
 
 class BackendBehaviors
@@ -40,37 +48,87 @@ class BackendBehaviors
 
         $rs = App::blog()->getPosts($params, false);
         if (!$rs->isEmpty()) {
-            $ret = '<ul>';
-            while ($rs->fetch()) {
-                $ret .= '<li class="line" id="dmpp' . $rs->post_id . '">';
-                $ret .= '<a href="' . App::backend()->url()->get('admin.post', ['id' => $rs->post_id]) . '">' . $rs->post_title . '</a>';
-                if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
-                    $ret .= ' (' .
-                    __('by') . ' ' . $rs->user_id . ' ' . sprintf($dt, __('on') . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt))
-                     . ')';
+            $lines = function (MetaRecord $rs, bool $large) {
+                while ($rs->fetch()) {
+                    $infos = [];
+                    if ($large) {
+                        $details = __('on') . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                        $infos[] = (new Text('time', $details))
+                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->post_dt)) . '"');
+                    }
+                    yield (new Li('dmpp' . $rs->post_id))
+                        ->class('line')
+                        ->separator(' ')
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.post', ['id' => $rs->post_id]))
+                                ->text($rs->post_title),
+                            ... $infos,
+                        ]);
                 }
+            };
 
-                $ret .= '</li>';
-            }
-
-            $ret .= '</ul>';
-
-            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]) . '">' . __('See all pending posts') . '</a></p>');
+            return (new Set())
+                ->items([
+                    (new Ul())
+                        ->items([
+                            ... $lines($rs, $large),
+                        ]),
+                    (new Para())
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]))
+                                ->text(__('See all pending posts')),
+                        ]),
+                ])
+            ->render();
         }
 
-        return '<p>' . __('No pending post') . '</p>';
+        return (new Note())
+            ->text(__('No pending post'))
+        ->render();
     }
 
-    private static function countPendingPosts(): string
+    /**
+     * Counts the number of pending posts.
+     *
+     * @deprecated since 2.34
+     *
+     * @return     string  Number of pending posts.
+     */
+    private static function countPendingPostsOld(): string
     {
         $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
 
             return '</span></a> <a href="' . App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+        }
+
+        return '';
+    }
+
+    /**
+     * Counts the number of pending posts.
+     *
+     * @return     string  Number of pending posts.
+     */
+    private static function countPendingPosts(): string
+    {
+        $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0);
+        if ($count) {
+            $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
+
+            return (new Link())
+                ->href(App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]))
+                ->items([
+                    (new Text('span', sprintf($str, $count)))
+                        ->class('db-icon-title-dm-pending'),
+                ])
+            ->render();
         }
 
         return '';
@@ -86,38 +144,88 @@ class BackendBehaviors
 
         $rs = App::blog()->getComments($params);
         if (!$rs->isEmpty()) {
-            $ret = '<ul>';
-            while ($rs->fetch()) {
-                $ret .= '<li class="line" ' . ($rs->comment_status == App::status()->comment()::JUNK ? ' class="sts-junk"' : '') .
-                ' id="dmpc' . $rs->comment_id . '">';
-                $ret .= '<a href="' . App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]) . '">' . $rs->post_title . '</a>';
-                if ($large) {
-                    $dt = '<time datetime="' . Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '">%s</time>';
-                    $ret .= ' (' .
-                    __('by') . ' ' . $rs->comment_author . ' ' . sprintf($dt, __('on') . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
-                        Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt)) .
-                    ')';
+            $lines = function (MetaRecord $rs, bool $large) {
+                while ($rs->fetch()) {
+                    $status = $rs->comment_status === App::status()->comment()::JUNK ? 'sts-junk' : '';
+                    $infos  = [];
+                    if ($large) {
+                        $details = __('on') . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
+                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                        $infos[] = (new Text('time', $details))
+                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->comment_dt)) . '"');
+                    }
+                    yield (new Li('dmpc' . $rs->comment_id))
+                        ->class(['line', $status])
+                        ->separator(' ')
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]))
+                                ->text($rs->post_title),
+                            ... $infos,
+                        ]);
                 }
+            };
 
-                $ret .= '</li>';
-            }
-
-            $ret .= '</ul>';
-
-            return $ret . ('<p><a href="' . App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]) . '">' . __('See all pending comments') . '</a></p>');
+            return (new Set())
+                ->items([
+                    (new Ul())
+                        ->items([
+                            ... $lines($rs, $large),
+                        ]),
+                    (new Para())
+                        ->items([
+                            (new Link())
+                                ->href(App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]))
+                                ->text(__('See all pending comments')),
+                        ]),
+                ])
+            ->render();
         }
 
-        return '<p>' . __('No pending comment') . '</p>';
+        return (new Note())
+            ->text(__('No pending comment'))
+        ->render();
     }
 
-    private static function countPendingComments(): string
+    /**
+     * Counts the number of pending comments.
+     *
+     * @deprecated since 2.34
+     *
+     * @return     string  Number of pending comments.
+     */
+    private static function countPendingCommentsOld(): string
     {
         $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0);
         if ($count) {
             $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
 
             return '</span></a> <a href="' . App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
+        }
+
+        return '';
+    }
+
+    /**
+     * Counts the number of pending comments.
+     *
+     * @return     string  Number of pending comments.
+     */
+    private static function countPendingComments(): string
+    {
+        $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0);
+        if ($count) {
+            $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
+
+            return (new Link())
+                ->href(App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]))
+                ->items([
+                    (new Text('span', sprintf($str, $count)))
+                        ->class('db-icon-title-dm-pending'),
+                ])
+            ->render();
         }
 
         return '';
@@ -146,17 +254,31 @@ class BackendBehaviors
         $preferences = My::prefs();
         if ($preferences->posts_count && $name === 'posts') {
             // Hack posts title if there is at least one pending post
-            $str = self::countPendingPosts();
-            if ($str !== '') {
-                $icon[0] .= $str;
+            if (version_compare(App::config()->dotclearVersion(), '2.34', '>=') || str_contains((string) App::config()->dotclearVersion(), 'dev')) {
+                $str = self::countPendingPosts();
+                if ($str !== '') {
+                    $icon[3] = ($icon[3] ?? '') . $str;
+                }
+            } else {
+                $str = self::countPendingPostsOld();
+                if ($str !== '') {
+                    $icon[0] .= $str;
+                }
             }
         }
 
         if ($preferences->comments_count && $name === 'comments') {
             // Hack comments title if there is at least one comment
-            $str = self::countPendingComments();
-            if ($str !== '') {
-                $icon[0] .= $str;
+            if (version_compare(App::config()->dotclearVersion(), '2.34', '>=') || str_contains((string) App::config()->dotclearVersion(), 'dev')) {
+                $str = self::countPendingComments();
+                if ($str !== '') {
+                    $icon[3] = ($icon[3] ?? '') . $str;
+                }
+            } else {
+                $str = self::countPendingCommentsOld();
+                if ($str !== '') {
+                    $icon[0] .= $str;
+                }
             }
         }
 
@@ -164,7 +286,7 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ArrayObject<int, ArrayObject<int, non-falsy-string>>  $contents  The contents
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
      */
     public static function adminDashboardContents(ArrayObject $contents): string
     {
@@ -172,25 +294,45 @@ class BackendBehaviors
         // Add large modules to the contents stack
         if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
-            $ret   = '<div id="pending-posts" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending posts') . '</h3>';
-            $ret .= self::getPendingPosts(
-                $preferences->posts_nb,
-                $preferences->posts_large
-            );
-            $ret .= '</div>';
+
+            $ret = (new Div('pending-posts'))
+                ->class(['box', $class])
+                ->items([
+                    (new Text(
+                        'h3',
+                        (new Img(urldecode(Page::getPF(My::id() . '/icon.svg'))))
+                            ->class('icon-small')
+                        ->render() . ' ' . __('Pending posts')
+                    )),
+                    (new Text(null, self::getPendingPosts(
+                        $preferences->posts_nb,
+                        $preferences->posts_large
+                    ))),
+                ])
+            ->render();
+
             $contents->append(new ArrayObject([$ret]));
         }
 
         if ($preferences->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
-            $ret   = '<div id="pending-comments" class="box ' . $class . '">' .
-            '<h3>' . '<img src="' . urldecode(Page::getPF('dmPending/icon.svg')) . '" alt="" class="icon-small">' . ' ' . __('Pending comments') . '</h3>';
-            $ret .= self::getPendingComments(
-                $preferences->comments_nb,
-                $preferences->comments_large
-            );
-            $ret .= '</div>';
+
+            $ret = (new Div('pending-comments'))
+                ->class(['box', $class])
+                ->items([
+                    (new Text(
+                        'h3',
+                        (new Img(urldecode(Page::getPF(My::id() . '/icon.svg'))))
+                            ->class('icon-small')
+                        ->render() . ' ' . __('Pending comments')
+                    )),
+                    (new Text(null, self::getPendingComments(
+                        $preferences->posts_nb,
+                        $preferences->posts_large
+                    ))),
+                ])
+            ->render();
+
             $contents->append(new ArrayObject([$ret]));
         }
 
