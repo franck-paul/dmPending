@@ -154,7 +154,7 @@ class BackendBehaviors
                             Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt);
                         $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
                         $infos[] = (new Text('time', $details))
-                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->comment_dt)) . '"');
+                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '"');
                     }
                     yield (new Li('dmpc' . $rs->comment_id))
                         ->class(['line', $status])
