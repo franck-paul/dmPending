@@ -15,9 +15,9 @@ $this->registerModule(
     'Pending Dashboard Module',
     'Display pending posts and comments on dashboard',
     'Franck Paul',
-    '5.3',
+    '5.4',
     [
-        'date'        => '2025-02-24T12:23:07+0100',
+        'date'        => '2025-03-06T00:23:11+0100',
         'requires'    => [['core', '2.33']],
         'permissions' => 'My',
         'type'        => 'plugin',
@@ -28,5 +28,6 @@ $this->registerModule(
         'details'    => 'https://open-time.net/?q=dmPending',
         'support'    => 'https://github.com/franck-paul/dmPending',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/dmPending/main/dcstore.xml',
+        'license'    => 'gpl2',
     ]
 );
