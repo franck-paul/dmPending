@@ -33,6 +33,7 @@ use Dotclear\Helper\Html\Form\Number;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Timestamp;
 use Dotclear\Helper\Html\Form\Ul;
 use Exception;
 
@@ -56,8 +57,8 @@ class BackendBehaviors
                             Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
                             Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
                         $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
-                        $infos[] = (new Text('time', $details))
-                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')) . '"');
+                        $infos[] = (new Timestamp($details))
+                            ->datetime(Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')));
                     }
                     yield (new Li('dmpp' . $rs->post_id))
                         ->class('line')
@@ -153,8 +154,8 @@ class BackendBehaviors
                             Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
                             Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt);
                         $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
-                        $infos[] = (new Text('time', $details))
-                            ->extra('datetime="' . Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')) . '"');
+                        $infos[] = (new Timestamp($details))
+                            ->datetime(Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')));
                     }
                     yield (new Li('dmpc' . $rs->comment_id))
                         ->class(['line', $status])
