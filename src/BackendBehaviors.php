@@ -97,25 +97,6 @@ class BackendBehaviors
     /**
      * Counts the number of pending posts.
      *
-     * @deprecated since 2.34
-     *
-     * @return     string  Number of pending posts.
-     */
-    private static function countPendingPostsOld(): string
-    {
-        $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0);
-        if ($count) {
-            $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
-
-            return '</span></a> <a href="' . App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
-        }
-
-        return '';
-    }
-
-    /**
-     * Counts the number of pending posts.
-     *
      * @return     string  Number of pending posts.
      */
     private static function countPendingPosts(): string
@@ -194,25 +175,6 @@ class BackendBehaviors
     /**
      * Counts the number of pending comments.
      *
-     * @deprecated since 2.34
-     *
-     * @return     string  Number of pending comments.
-     */
-    private static function countPendingCommentsOld(): string
-    {
-        $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0);
-        if ($count) {
-            $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
-
-            return '</span></a> <a href="' . App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]) . '"><span class="db-icon-title-dm-pending">' . sprintf($str, $count);
-        }
-
-        return '';
-    }
-
-    /**
-     * Counts the number of pending comments.
-     *
      * @return     string  Number of pending comments.
      */
     private static function countPendingComments(): string
@@ -239,10 +201,10 @@ class BackendBehaviors
 
         return
         Page::jsJson('dm_pending', [
-            'dmPendingPosts_Counter'    => $preferences->posts_count,
-            'dmPendingComments_Counter' => $preferences->comments_count,
-            'dmPending_AutoRefresh'     => $preferences->autorefresh,
-            'dmPending_Interval'        => ($preferences->interval ?? 60),
+            'postsCounter'    => $preferences->posts_count,
+            'commentsCounter' => $preferences->comments_count,
+            'autoRefresh'     => $preferences->autorefresh,
+            'interval'        => ($preferences->interval ?? 60),
         ]) .
         My::jsLoad('service.js');
     }
@@ -256,31 +218,17 @@ class BackendBehaviors
         $preferences = My::prefs();
         if ($preferences->posts_count && $name === 'posts') {
             // Hack posts title if there is at least one pending post
-            if (version_compare(App::config()->dotclearVersion(), '2.34', '>=') || str_contains((string) App::config()->dotclearVersion(), 'dev')) {
-                $str = self::countPendingPosts();
-                if ($str !== '') {
-                    $icon[3] = ($icon[3] ?? '') . $str;
-                }
-            } else {
-                $str = self::countPendingPostsOld();
-                if ($str !== '') {
-                    $icon[0] .= $str;
-                }
+            $str = self::countPendingPosts();
+            if ($str !== '') {
+                $icon[3] = ($icon[3] ?? '') . $str;
             }
         }
 
         if ($preferences->comments_count && $name === 'comments') {
             // Hack comments title if there is at least one comment
-            if (version_compare(App::config()->dotclearVersion(), '2.34', '>=') || str_contains((string) App::config()->dotclearVersion(), 'dev')) {
-                $str = self::countPendingComments();
-                if ($str !== '') {
-                    $icon[3] = ($icon[3] ?? '') . $str;
-                }
-            } else {
-                $str = self::countPendingCommentsOld();
-                if ($str !== '') {
-                    $icon[0] .= $str;
-                }
+            $str = self::countPendingComments();
+            if ($str !== '') {
+                $icon[3] = ($icon[3] ?? '') . $str;
             }
         }
 
