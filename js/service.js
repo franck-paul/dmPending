@@ -137,10 +137,7 @@ dotclear.ready(() => {
   }
 
   if (dotclear.dmPending.postsCounter) {
-    let icon_posts = document.querySelector('#dashboard-main #icons p a[href="posts.php"]');
-    if (!icon_posts) {
-      icon_posts = document.querySelector('#dashboard-main #icons p #icon-process-posts-fav');
-    }
+    icon_posts = document.querySelector('#dashboard-main #icons p #icon-process-posts-fav');
     if (icon_posts) {
       // Icon exists on dashboard
       // First pass
@@ -150,10 +147,7 @@ dotclear.ready(() => {
     }
   }
   if (dotclear.dmPending.commentsCounter) {
-    let icon_comments = document.querySelector('#dashboard-main #icons p a[href="comments.php"]');
-    if (!icon_comments) {
-      icon_comments = document.querySelector('#dashboard-main #icons p #icon-process-comments-fav');
-    }
+    icon_comments = document.querySelector('#dashboard-main #icons p #icon-process-comments-fav');
     if (icon_comments) {
       // Icon exists on dashboard
       // First pass
