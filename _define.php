@@ -15,9 +15,9 @@ $this->registerModule(
     'Pending Dashboard Module',
     'Display pending posts and comments on dashboard',
     'Franck Paul',
-    '8.2',
+    '8.3',
     [
-        'date'     => '2025-09-22T10:33:05+0200',
+        'date'     => '2025-10-25T10:32:37+0200',
         'requires' => [
             ['core', '2.36'],
             ['dmHelper', '5.0'],
