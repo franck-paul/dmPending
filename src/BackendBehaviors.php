@@ -50,23 +50,32 @@ class BackendBehaviors
         $rs = App::blog()->getPosts($params, false);
         if (!$rs->isEmpty()) {
             $lines = function (MetaRecord $rs, bool $large) {
+                $date_format = is_string($date_format = App::blog()->settings()->system->date_format) ? $date_format : '%F';
+                $time_format = is_string($time_format = App::blog()->settings()->system->time_format) ? $time_format : '%T';
+                $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
+
                 while ($rs->fetch()) {
+                    $post_id    = is_numeric($post_id = $rs->post_id) ? (int) $post_id : 0;
+                    $post_dt    = is_string($post_dt = $rs->post_dt) ? $post_dt : '';
+                    $user_id    = is_string($user_id = $rs->user_id) ? $user_id : '';
+                    $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+
                     $infos = [];
                     if ($large) {
                         $details = __('on') . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->post_dt) . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->post_dt);
-                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                            Date::dt2str($date_format, $post_dt) . ' ' .
+                            Date::dt2str($time_format, $post_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $user_id));
                         $infos[] = (new Timestamp($details))
-                            ->datetime(Date::iso8601((int) strtotime($rs->post_dt), App::auth()->getInfo('user_tz')));
+                            ->datetime(Date::iso8601((int) strtotime($post_dt), $user_tz));
                     }
-                    yield (new Li('dmpp' . $rs->post_id))
+                    yield (new Li('dmpp' . $post_id))
                         ->class('line')
                         ->separator(' ')
                         ->items([
                             (new Link())
-                                ->href(App::backend()->url()->get('admin.post', ['id' => $rs->post_id]))
-                                ->text($rs->post_title),
+                                ->href(App::backend()->url()->get('admin.post', ['id' => $post_id]))
+                                ->text($post_title),
                             ... $infos,
                         ]);
                 }
@@ -100,14 +109,12 @@ class BackendBehaviors
      */
     private static function countPendingPosts(): string
     {
-        $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0);
-        if ($count) {
-            $str = sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), (int) $count);
-
+        $count = is_numeric($count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0)) ? (int) $count : 0;
+        if ($count > 0) {
             return (new Link())
                 ->href(App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]))
                 ->items([
-                    (new Span(sprintf($str, $count)))
+                    (new Span(sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count)))
                         ->class('db-icon-title-dm-pending'),
                 ])
             ->render();
@@ -127,24 +134,33 @@ class BackendBehaviors
         $rs = App::blog()->getComments($params);
         if (!$rs->isEmpty()) {
             $lines = function (MetaRecord $rs, bool $large) {
+                $date_format = is_string($date_format = App::blog()->settings()->system->date_format) ? $date_format : '%F';
+                $time_format = is_string($time_format = App::blog()->settings()->system->time_format) ? $time_format : '%T';
+                $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
+
                 while ($rs->fetch()) {
-                    $status = $rs->comment_status === App::status()->comment()::JUNK ? 'sts-junk' : '';
-                    $infos  = [];
+                    $status     = $rs->comment_status === App::status()->comment()::JUNK ? 'sts-junk' : '';
+                    $comment_id = is_numeric($comment_id = $rs->comment_id) ? (int) $comment_id : 0;
+                    $comment_dt = is_string($comment_dt = $rs->comment_dt) ? $comment_dt : '';
+                    $user_id    = is_string($user_id = $rs->user_id) ? $user_id : '';
+                    $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+
+                    $infos = [];
                     if ($large) {
                         $details = __('on') . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->date_format, $rs->comment_dt) . ' ' .
-                            Date::dt2str(App::blog()->settings()->system->time_format, $rs->comment_dt);
-                        $infos[] = (new Text(null, __('by') . ' ' . $rs->user_id));
+                            Date::dt2str($date_format, $comment_dt) . ' ' .
+                            Date::dt2str($time_format, $comment_dt);
+                        $infos[] = (new Text(null, __('by') . ' ' . $user_id));
                         $infos[] = (new Timestamp($details))
-                            ->datetime(Date::iso8601((int) strtotime($rs->comment_dt), App::auth()->getInfo('user_tz')));
+                            ->datetime(Date::iso8601((int) strtotime($comment_dt), $user_tz));
                     }
-                    yield (new Li('dmpc' . $rs->comment_id))
+                    yield (new Li('dmpc' . $comment_id))
                         ->class(['line', $status])
                         ->separator(' ')
                         ->items([
                             (new Link())
-                                ->href(App::backend()->url()->get('admin.comment', ['id' => $rs->comment_id]))
-                                ->text($rs->post_title),
+                                ->href(App::backend()->url()->get('admin.comment', ['id' => $comment_id]))
+                                ->text($post_title),
                             ... $infos,
                         ]);
                 }
@@ -178,14 +194,12 @@ class BackendBehaviors
      */
     private static function countPendingComments(): string
     {
-        $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0);
-        if ($count) {
-            $str = sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), (int) $count);
-
+        $count = is_numeric($count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0)) ? (int) $count : 0;
+        if ($count > 0) {
             return (new Link())
                 ->href(App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]))
                 ->items([
-                    (new Span(sprintf($str, $count)))
+                    (new Span(sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count)))
                         ->class('db-icon-title-dm-pending'),
                 ])
             ->render();
@@ -215,20 +229,30 @@ class BackendBehaviors
     public static function adminDashboardFavsIcon(string $name, ArrayObject $icon): string
     {
         $preferences = My::prefs();
-        if ($preferences->posts_count && $name === 'posts') {
-            // Hack posts title if there is at least one pending post
-            $str = self::countPendingPosts();
-            if ($str !== '') {
-                $icon[3] = ($icon[3] ?? '') . $str;
-            }
-        }
 
-        if ($preferences->comments_count && $name === 'comments') {
-            // Hack comments title if there is at least one comment
-            $str = self::countPendingComments();
-            if ($str !== '') {
-                $icon[3] = ($icon[3] ?? '') . $str;
-            }
+        switch ($name) {
+            case 'posts':
+                if ($preferences->posts_count) {
+                    // Hack posts title if there is at least one pending post
+                    $str = self::countPendingPosts();
+                    if ($str !== '') {
+                        $third   = is_string($third = $icon[3] ?? '') ? $third : '';
+                        $icon[3] = $third . $str;
+                    }
+                }
+
+                break;
+            case 'comments':
+                if ($preferences->comments_count) {
+                    // Hack comments title if there is at least one comment
+                    $str = self::countPendingComments();
+                    if ($str !== '') {
+                        $third   = is_string($third = $icon[3] ?? '') ? $third : '';
+                        $icon[3] = $third . $str;
+                    }
+                }
+
+                break;
         }
 
         return '';
@@ -240,9 +264,12 @@ class BackendBehaviors
     public static function adminDashboardContents(ArrayObject $contents): string
     {
         $preferences = My::prefs();
+
         // Add large modules to the contents stack
         if ($preferences->posts) {
             $class = ($preferences->posts_large ? 'medium' : 'small');
+
+            $posts_nb = is_numeric($posts_nb = $preferences->posts_nb) ? (int) $posts_nb : 0;
 
             $ret = (new Div('pending-posts'))
                 ->class(['box', $class])
@@ -255,8 +282,8 @@ class BackendBehaviors
                         ->render() . ' ' . __('Pending posts')
                     )),
                     (new Text(null, self::getPendingPosts(
-                        $preferences->posts_nb,
-                        $preferences->posts_large
+                        $posts_nb,
+                        (bool) $preferences->posts_large
                     ))),
                 ])
             ->render();
@@ -266,6 +293,8 @@ class BackendBehaviors
 
         if ($preferences->comments) {
             $class = ($preferences->comments_large ? 'medium' : 'small');
+
+            $comments_nb = is_numeric($comments_nb = $preferences->comments_nb) ? (int) $comments_nb : 0;
 
             $ret = (new Div('pending-comments'))
                 ->class(['box', $class])
@@ -278,8 +307,8 @@ class BackendBehaviors
                         ->render() . ' ' . __('Pending comments')
                     )),
                     (new Text(null, self::getPendingComments(
-                        $preferences->posts_nb,
-                        $preferences->posts_large
+                        $comments_nb,
+                        (bool) $preferences->comments_large
                     ))),
                 ])
             ->render();
@@ -296,19 +325,25 @@ class BackendBehaviors
 
         // Get and store user's prefs for plugin options
         try {
+            // Post data helpers
+            $_Bool = fn (string $name): bool => !empty($_POST[$name]);
+            $_Int  = fn (string $name, int $default = 0): int => isset($_POST[$name]) && is_numeric($val = $_POST[$name]) ? (int) $val : $default;
+
             // Pending posts
-            $preferences->put('posts', !empty($_POST['dmpending_posts']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('posts_nb', (int) $_POST['dmpending_posts_nb'], App::userWorkspace()::WS_INT);
-            $preferences->put('posts_large', empty($_POST['dmpending_posts_small']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('posts_count', !empty($_POST['dmpending_posts_count']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts', $_Bool('dmpending_posts'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_nb', $_Int('dmpending_posts_nb'), App::userWorkspace()::WS_INT);
+            $preferences->put('posts_large', !$_Bool('dmpending_posts_small'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('posts_count', $_Bool('dmpending_posts_count'), App::userWorkspace()::WS_BOOL);
+
             // Pending comments
-            $preferences->put('comments', !empty($_POST['dmpending_comments']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('comments_nb', (int) $_POST['dmpending_comments_nb'], App::userWorkspace()::WS_INT);
-            $preferences->put('comments_large', empty($_POST['dmpending_comments_small']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('comments_count', !empty($_POST['dmpending_comments_count']), App::userWorkspace()::WS_BOOL);
+            $preferences->put('comments', $_Bool('dmpending_comments'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('comments_nb', $_Int('dmpending_comments_nb'), App::userWorkspace()::WS_INT);
+            $preferences->put('comments_large', !$_Bool('dmpending_comments_small'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('comments_count', $_Bool('dmpending_comments_count'), App::userWorkspace()::WS_BOOL);
+
             // Interval
-            $preferences->put('autorefresh', !empty($_POST['dmpending_autorefresh']), App::userWorkspace()::WS_BOOL);
-            $preferences->put('interval', (int) $_POST['dmpending_interval'], App::userWorkspace()::WS_INT);
+            $preferences->put('autorefresh', $_Bool('dmpending_autorefresh'), App::userWorkspace()::WS_BOOL);
+            $preferences->put('interval', $_Int('dmpending_interval'), App::userWorkspace()::WS_INT);
         } catch (Exception $e) {
             App::error()->add($e->getMessage());
         }
@@ -318,6 +353,10 @@ class BackendBehaviors
 
     public static function adminDashboardOptionsForm(): string
     {
+        // Variable data helpers
+        $_Bool = fn (mixed $var): bool => (bool) $var;
+        $_Int  = fn (mixed $var, int $default = 0): int => $var !== null && is_numeric($val = $var) ? (int) $val : $default;
+
         $preferences = My::prefs();
 
         // Add fieldset for plugin options
@@ -328,53 +367,53 @@ class BackendBehaviors
         ->fields([
             (new Text('h5', __('Pending posts'))),
             (new Para())->items([
-                (new Checkbox('dmpending_posts_count', $preferences->posts_count))
+                (new Checkbox('dmpending_posts_count', $_Bool($preferences->posts_count)))
                     ->value(1)
                     ->label((new Label(__('Display count of pending posts on posts dashboard icon'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_posts', $preferences->posts))
+                (new Checkbox('dmpending_posts', $_Bool($preferences->posts)))
                     ->value(1)
                     ->label((new Label(__('Display pending posts'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_posts_nb', 1, 999, $preferences->posts_nb))
+                (new Number('dmpending_posts_nb', 1, 999, $_Int($preferences->posts_nb, 5)))
                     ->label((new Label(__('Number of pending posts to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_posts_small', !$preferences->posts_large))
+                (new Checkbox('dmpending_posts_small', !$_Bool($preferences->posts_large)))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Text(null, '<hr>')),
             (new Text('h5', __('Pending comments'))),
             (new Para())->items([
-                (new Checkbox('dmpending_comments_count', $preferences->comments_count))
+                (new Checkbox('dmpending_comments_count', $_Bool($preferences->comments_count)))
                     ->value(1)
                     ->label((new Label(__('Display count of pending comments on comments dashboard icon'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_comments', $preferences->comments))
+                (new Checkbox('dmpending_comments', $_Bool($preferences->comments)))
                     ->value(1)
                     ->label((new Label(__('Display pending comments'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_comments_nb', 1, 999, $preferences->comments_nb))
+                (new Number('dmpending_comments_nb', 1, 999, $_Int($preferences->comments_nb, 5)))
                     ->label((new Label(__('Number of pending comments to display:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
             (new Para())->items([
-                (new Checkbox('dmpending_comments_small', !$preferences->comments_large))
+                (new Checkbox('dmpending_comments_small', !$_Bool($preferences->comments_large)))
                     ->value(1)
                     ->label((new Label(__('Small screen'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Text(null, '<hr>')),
             (new Para())->items([
-                (new Checkbox('dmpending_autorefresh', $preferences->autorefresh))
+                (new Checkbox('dmpending_autorefresh', $_Bool($preferences->autorefresh)))
                     ->value(1)
                     ->label((new Label(__('Auto refresh'), Label::INSIDE_TEXT_AFTER))),
             ]),
             (new Para())->items([
-                (new Number('dmpending_interval', 0, 9_999_999, $preferences->interval))
+                (new Number('dmpending_interval', 0, 9_999_999, $_Int($preferences->interval)))
                     ->label((new Label(__('Interval in seconds between two refreshes:'), Label::INSIDE_TEXT_BEFORE))),
             ]),
         ])
