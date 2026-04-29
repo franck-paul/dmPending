@@ -109,7 +109,7 @@ class BackendBehaviors
      */
     private static function countPendingPosts(): string
     {
-        $count = is_numeric($count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->f(0)) ? (int) $count : 0;
+        $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->cardinal();
         if ($count > 0) {
             return (new Link())
                 ->href(App::backend()->url()->get('admin.posts', ['status' => App::status()->post()::PENDING]))
@@ -194,7 +194,7 @@ class BackendBehaviors
      */
     private static function countPendingComments(): string
     {
-        $count = is_numeric($count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->f(0)) ? (int) $count : 0;
+        $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->cardinal();
         if ($count > 0) {
             return (new Link())
                 ->href(App::backend()->url()->get('admin.comments', ['status' => App::status()->comment()::PENDING]))
