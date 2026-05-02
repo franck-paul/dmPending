@@ -69,6 +69,7 @@ class BackendBehaviors
                         $infos[] = (new Timestamp($details))
                             ->datetime(Date::iso8601((int) strtotime($post_dt), $user_tz));
                     }
+
                     yield (new Li('dmpp' . $post_id))
                         ->class('line')
                         ->separator(' ')
@@ -154,6 +155,7 @@ class BackendBehaviors
                         $infos[] = (new Timestamp($details))
                             ->datetime(Date::iso8601((int) strtotime($comment_dt), $user_tz));
                     }
+
                     yield (new Li('dmpc' . $comment_id))
                         ->class(['line', $status])
                         ->separator(' ')
@@ -344,8 +346,8 @@ class BackendBehaviors
             // Interval
             $preferences->put('autorefresh', $_Bool('dmpending_autorefresh'), App::userWorkspace()::WS_BOOL);
             $preferences->put('interval', $_Int('dmpending_interval'), App::userWorkspace()::WS_INT);
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         return '';
