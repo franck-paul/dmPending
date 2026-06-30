@@ -55,10 +55,10 @@ class BackendBehaviors
                 $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
 
                 while ($rs->fetch()) {
-                    $post_id    = is_numeric($post_id = $rs->post_id) ? (int) $post_id : 0;
-                    $post_dt    = is_string($post_dt = $rs->post_dt) ? $post_dt : '';
-                    $user_id    = is_string($user_id = $rs->user_id) ? $user_id : '';
-                    $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+                    $post_id    = $rs->intField('post_id');
+                    $post_dt    = $rs->strField('post_dt');
+                    $user_id    = $rs->strField('user_id');
+                    $post_title = $rs->strField('post_title');
 
                     $infos = [];
                     if ($large) {
@@ -140,11 +140,11 @@ class BackendBehaviors
                 $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
 
                 while ($rs->fetch()) {
-                    $status     = $rs->comment_status === App::status()->comment()::JUNK ? 'sts-junk' : '';
-                    $comment_id = is_numeric($comment_id = $rs->comment_id) ? (int) $comment_id : 0;
-                    $comment_dt = is_string($comment_dt = $rs->comment_dt) ? $comment_dt : '';
-                    $user_id    = is_string($user_id = $rs->user_id) ? $user_id : '';
-                    $post_title = is_string($post_title = $rs->post_title) ? $post_title : '';
+                    $status     = $rs->intField('comment_status') === App::status()->comment()::JUNK ? 'sts-junk' : '';
+                    $comment_id = $rs->intField('comment_id');
+                    $comment_dt = $rs->strField('comment_dt');
+                    $user_id    = $rs->strField('user_id');
+                    $post_title = $rs->strField('post_title');
 
                     $infos = [];
                     if ($large) {
