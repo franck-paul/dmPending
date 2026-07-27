@@ -2,6 +2,13 @@
 'use strict';
 
 dotclear.ready(() => {
+  /**
+   * Check connection
+   *
+   * @return     {?boolean}  true/false depending on connection, null if cannot be tested
+   */
+  dotclear.dmOnline = () => ('onLine' in navigator ? navigator.onLine : null);
+
   dotclear.dmPending = dotclear.getData('dm_pending');
 
   const viewPost = (line, _action = 'toggle', event = null) => {
@@ -9,6 +16,8 @@ dotclear.ready(() => {
   };
 
   const getPostsCount = (icon) => {
+    if (dotclear.dmOnline() === false) return;
+
     dotclear.services(
       'dmPendingPostsCount',
       (data) => {
@@ -67,6 +76,8 @@ dotclear.ready(() => {
   };
 
   const getCommentsCount = (icon) => {
+    if (dotclear.dmOnline() === false) return;
+
     dotclear.services(
       'dmPendingCommentsCount',
       (data) => {
