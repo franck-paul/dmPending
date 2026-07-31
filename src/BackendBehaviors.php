@@ -221,7 +221,7 @@ class BackendBehaviors
             'autoRefresh'     => $preferences->getBool('autorefresh'),
             'interval'        => $preferences->getInt('interval', false) ?: 60,
         ]) .
-        My::jsLoad('service.js');
+        My::jsLoad('service.js', defer: true);
     }
 
     /**
