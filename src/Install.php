@@ -46,9 +46,9 @@ class Install
                 }
 
                 // Change settings names (remove pending_ prefix in them)
-                $rename = static function (string $name, UserWorkspaceInterface $preferences): void {
-                    if ($preferences->prefExists('pending_' . $name, true)) {
-                        $preferences->rename('pending_' . $name, $name);
+                $rename = static function (string $name, UserWorkspaceInterface $userWorkspace): void {
+                    if ($userWorkspace->prefExists('pending_' . $name, true)) {
+                        $userWorkspace->rename('pending_' . $name, $name);
                     }
                 };
 

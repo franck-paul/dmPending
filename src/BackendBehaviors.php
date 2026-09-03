@@ -49,16 +49,16 @@ class BackendBehaviors
 
         $rs = App::blog()->getPosts($params, false);
         if (!$rs->isEmpty()) {
-            $lines = function (MetaRecord $rs, bool $large) {
+            $lines = function (MetaRecord $metaRecord, bool $large) {
                 $date_format = App::blog()->settings()->get('system')->getStr('date_format', false) ?: '%F';
                 $time_format = App::blog()->settings()->get('system')->getStr('time_format', false) ?: '%T';
                 $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
 
-                while ($rs->fetch()) {
-                    $post_id    = $rs->intField('post_id');
-                    $post_dt    = $rs->strField('post_dt');
-                    $user_id    = $rs->strField('user_id');
-                    $post_title = $rs->strField('post_title');
+                while ($metaRecord->fetch()) {
+                    $post_id    = $metaRecord->intField('post_id');
+                    $post_dt    = $metaRecord->strField('post_dt');
+                    $user_id    = $metaRecord->strField('user_id');
+                    $post_title = $metaRecord->strField('post_title');
 
                     $infos = [];
                     if ($large) {
@@ -134,17 +134,17 @@ class BackendBehaviors
 
         $rs = App::blog()->getComments($params);
         if (!$rs->isEmpty()) {
-            $lines = function (MetaRecord $rs, bool $large) {
+            $lines = function (MetaRecord $metaRecord, bool $large) {
                 $date_format = App::blog()->settings()->get('system')->getStr('date_format', false) ?: '%F';
                 $time_format = App::blog()->settings()->get('system')->getStr('time_format', false) ?: '%T';
                 $user_tz     = is_string($user_tz = App::auth()->getInfo('user_tz')) ? $user_tz : 'UTC';
 
-                while ($rs->fetch()) {
-                    $status     = $rs->intField('comment_status') === App::status()->comment()::JUNK ? 'sts-junk' : '';
-                    $comment_id = $rs->intField('comment_id');
-                    $comment_dt = $rs->strField('comment_dt');
-                    $user_id    = $rs->strField('user_id');
-                    $post_title = $rs->strField('post_title');
+                while ($metaRecord->fetch()) {
+                    $status     = $metaRecord->intField('comment_status') === App::status()->comment()::JUNK ? 'sts-junk' : '';
+                    $comment_id = $metaRecord->intField('comment_id');
+                    $comment_dt = $metaRecord->strField('comment_dt');
+                    $user_id    = $metaRecord->strField('user_id');
+                    $post_title = $metaRecord->strField('post_title');
 
                     $infos = [];
                     if ($large) {
@@ -226,9 +226,9 @@ class BackendBehaviors
 
     /**
      * @param      string                       $name   The name
-     * @param      ArrayObject<int, mixed>      $icon   The icon
+     * @param      ArrayObject<int, mixed>      $arrayObject   The icon
      */
-    public static function adminDashboardFavsIcon(string $name, ArrayObject $icon): string
+    public static function adminDashboardFavsIcon(string $name, ArrayObject $arrayObject): string
     {
         $preferences = My::prefs();
 
@@ -238,8 +238,8 @@ class BackendBehaviors
                     // Hack posts title if there is at least one pending post
                     $str = self::countPendingPosts();
                     if ($str !== '') {
-                        $third   = is_string($third = $icon[3] ?? '') ? $third : '';
-                        $icon[3] = $third . $str;
+                        $third          = is_string($third = $arrayObject[3] ?? '') ? $third : '';
+                        $arrayObject[3] = $third . $str;
                     }
                 }
 
@@ -249,8 +249,8 @@ class BackendBehaviors
                     // Hack comments title if there is at least one comment
                     $str = self::countPendingComments();
                     if ($str !== '') {
-                        $third   = is_string($third = $icon[3] ?? '') ? $third : '';
-                        $icon[3] = $third . $str;
+                        $third          = is_string($third = $arrayObject[3] ?? '') ? $third : '';
+                        $arrayObject[3] = $third . $str;
                     }
                 }
 
@@ -261,9 +261,9 @@ class BackendBehaviors
     }
 
     /**
-     * @param      ArrayObject<int, ArrayObject<int, string>>  $contents  The contents
+     * @param      ArrayObject<int, ArrayObject<int, string>>  $arrayObject  The contents
      */
-    public static function adminDashboardContents(ArrayObject $contents): string
+    public static function adminDashboardContents(ArrayObject $arrayObject): string
     {
         $preferences = My::prefs();
 
@@ -290,7 +290,7 @@ class BackendBehaviors
                 ])
             ->render();
 
-            $contents->append(new ArrayObject([$ret]));
+            $arrayObject->append(new ArrayObject([$ret]));
         }
 
         if ($preferences->getBool('comments')) {
@@ -315,7 +315,7 @@ class BackendBehaviors
                 ])
             ->render();
 
-            $contents->append(new ArrayObject([$ret]));
+            $arrayObject->append(new ArrayObject([$ret]));
         }
 
         return '';
