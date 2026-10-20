@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/franck-paul/dmPending)](https://github.com/franck-paul/dmPending/releases)
 [![Date](https://img.shields.io/github/release-date/franck-paul/dmPending)](https://github.com/franck-paul/dmPending/releases)
 [![Issues](https://img.shields.io/github/issues/franck-paul/dmPending)](https://github.com/franck-paul/dmPending/issues)
-[![License](https://img.shields.io/github/license/franck-paul/dmPending)](https://github.com/franck-paul/dmPending/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/franck-paul/dmPending)](https://github.com/franck-paul/dmPending/blob/main/LICENSE)
 
 Dotclear 2 plugin
 
