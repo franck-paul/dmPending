@@ -27,7 +27,7 @@ class BackendRest
     public static function getPendingPostsCount(): array
     {
         $count = App::blog()->getPosts(['post_status' => App::status()->post()::PENDING], true)->cardinal();
-        $str   = ($count !== 0 ? sprintf(__('(%d pending post)', '(%d pending posts)', (int) $count), $count) : '');
+        $str   = ($count !== 0 ? sprintf(__('(%d pending post)', '(%d pending posts)', $count), $count) : '');
 
         return [
             'ret' => true,
@@ -44,7 +44,7 @@ class BackendRest
     public static function getPendingCommentsCount(): array
     {
         $count = App::blog()->getComments(['comment_status' => App::status()->comment()::PENDING], true)->cardinal();
-        $str   = ($count !== 0 ? sprintf(__('(%d pending comment)', '(%d pending comments)', (int) $count), $count) : '');
+        $str   = ($count !== 0 ? sprintf(__('(%d pending comment)', '(%d pending comments)', $count), $count) : '');
 
         return [
             'ret' => true,
