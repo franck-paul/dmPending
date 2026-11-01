@@ -234,7 +234,7 @@ class BackendBehaviors
 
         switch ($name) {
             case 'posts':
-                if ($preferences->getBool('posts_count')) {
+                if ($preferences->getBool('posts_count', false)) {
                     // Hack posts title if there is at least one pending post
                     $str = self::countPendingPosts();
                     if ($str !== '') {
@@ -245,7 +245,7 @@ class BackendBehaviors
 
                 break;
             case 'comments':
-                if ($preferences->getBool('comments_count')) {
+                if ($preferences->getBool('comments_count', false)) {
                     // Hack comments title if there is at least one comment
                     $str = self::countPendingComments();
                     if ($str !== '') {
@@ -268,8 +268,8 @@ class BackendBehaviors
         $preferences = My::prefs();
 
         // Add large modules to the contents stack
-        if ($preferences->getBool('posts')) {
-            $class = ($preferences->getBool('posts_large') ? 'medium' : 'small');
+        if ($preferences->getBool('posts', false)) {
+            $class = ($preferences->getBool('posts_large', false) ? 'medium' : 'small');
 
             $posts_nb = $preferences->getInt('posts_nb', false);
 
@@ -293,8 +293,8 @@ class BackendBehaviors
             $arrayObject->append(new ArrayObject([$ret]));
         }
 
-        if ($preferences->getBool('comments')) {
-            $class = ($preferences->getBool('comments_large') ? 'medium' : 'small');
+        if ($preferences->getBool('comments', false)) {
+            $class = ($preferences->getBool('comments_large', false) ? 'medium' : 'small');
 
             $comments_nb = $preferences->getInt('comments_nb', false);
 
